@@ -41,7 +41,7 @@ export default function HomePage() {
                 <Grid item xs={3}>
                     {
                     songs.map((song) => (
-                        <SongCard song={song} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
+                        <SongCard song={song} inPlaylist={false} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
                     ))
                     }
                 </Grid>

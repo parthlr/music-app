@@ -1,10 +1,6 @@
 import * as React from 'react';
 import {useState} from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AspectRatio from '@mui/joy/AspectRatio';
+import Axios from "axios";
 import Box from '@mui/material/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
@@ -14,6 +10,54 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import Menu from '@mui/joy/Menu';
 import MenuItem from '@mui/joy/MenuItem';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import DeleteForever from '@mui/icons-material/DeleteForever';
+import Add from '@mui/icons-material/Add';
+
+function ActionMenu(props) {
+    if (props.inPlaylist) {
+        return (
+            <Menu
+                id="basic-menu"
+                anchorEl={props.anchorEl}
+                open={props.open}
+                onClose={props.handleClose}
+                aria-labelledby="basic-demo-button"
+                placement="bottom-start"
+            >
+                <MenuItem onClick={props.addToPlaylist}>
+                    <ListItemDecorator sx={{ color: 'inherit' }}>
+                        <Add />
+                    </ListItemDecorator>{" "}
+                    Add to Playlist
+                </MenuItem>
+                <MenuItem onClick={props.deleteFromPlaylist} variant="soft" color="danger">
+                    <ListItemDecorator sx={{ color: 'inherit' }}>
+                        <DeleteForever />
+                    </ListItemDecorator>{" "}
+                    Remove
+                </MenuItem>
+            </Menu>
+        );
+    }
+    return (
+        <Menu
+            id="basic-menu"
+            anchorEl={props.anchorEl}
+            open={props.open}
+            onClose={props.handleClose}
+            aria-labelledby="basic-demo-button"
+            placement="bottom-start"
+        >
+            <MenuItem onClick={props.addToPlaylist}>
+                <ListItemDecorator sx={{ color: 'inherit' }}>
+                    <Add />
+                </ListItemDecorator>{" "}
+                Add to Playlist
+            </MenuItem>
+        </Menu>
+    );
+}
 
 export default function SongCard(props) {
 
@@ -28,6 +72,21 @@ export default function SongCard(props) {
         props.openList();
         props.clickSong();
         setAnchorEl(null);
+    }
+
+    const deleteFromPlaylist = () => {
+        Axios.post('http://localhost:5000/delete_from_playlist', {
+            songID: props.song.songID,
+            playlistID: props.playlistID,
+        }).then((response) => {
+            if (!response.data.err) {
+                console.log("DELETED SONG FROM PLAYLIST");
+            } else {
+                console.log(response.data.err);
+            }
+        });
+        setAnchorEl(null);
+        window.location.reload(false);
     }
 
     const handleClose = () => {
@@ -53,15 +112,7 @@ export default function SongCard(props) {
                 <IconButton variant="outlined" color="neutral" size="small" onClick={handleClick}>
                     <MoreVert />
                 </IconButton>
-                <Menu
-                    id="basic-menu"
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="basic-demo-button"
-                >
-                    <MenuItem onClick={addToPlaylist}>Add to Playlist</MenuItem>
-                </Menu>
+                <ActionMenu inPlaylist={props.inPlaylist} anchorEl={anchorEl} open={open} handleClose={handleClose} addToPlaylist={addToPlaylist} deleteFromPlaylist={deleteFromPlaylist} />
             </Box>
         </Card>
         </div>

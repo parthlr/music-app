@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
 
 export default function PlaylistsDialog(props) {
 
@@ -56,20 +57,23 @@ export default function PlaylistsDialog(props) {
             <ModalDialog
                 aria-labelledby="basic-modal-dialog-title"
                 aria-describedby="basic-modal-dialog-description"
-                sx={{ maxWidth: 500 }}
+                size="lg"
             >
-            <Typography id="basic-modal-dialog-title" component="h2">
-                Select Playlist
-            </Typography>
-            <List>
-                {
-                    playlists.map((playlist) => (
-                        <ListItem>
-                            <ListItemButton onClick={() => addSongToPlaylist(playlist.playlistID)}>{playlist.name}</ListItemButton>
-                        </ListItem>
-                    ))
-                }
-            </List>
+                <Typography id="basic-modal-dialog-title" component="h2">
+                    Select Playlist
+                </Typography>
+                <List>
+                    {
+                        playlists.map((playlist) => (
+                            <ListItem>
+                                <ListItemButton onClick={() => addSongToPlaylist(playlist.playlistID)}>
+                                    <ListItemContent>{playlist.name}</ListItemContent>
+                                    <Add />
+                                </ListItemButton>
+                            </ListItem>
+                        ))
+                    }
+                </List>
             </ModalDialog>
         </Modal>
     );

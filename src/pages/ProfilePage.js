@@ -95,7 +95,7 @@ export default function ProfilePage() {
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'row-reverse',
+                        justifyContent: 'space-between',
                         p: 1,
                         m: 1,
                         width: 800,

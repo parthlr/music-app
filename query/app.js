@@ -208,6 +208,23 @@ app.post('/add_to_playlist', (req, res) => {
     );
 });
 
+app.post('/delete_from_playlist', (req, res) => {
+    const {songID, playlistID} = req.body;
+    connection.query(
+        'DELETE FROM songPlaylist WHERE songID = ? AND playlistID = ?',
+        [songID, playlistID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY DELETED SONG FROM PLAYLIST");
+                res.send({message: "Deleted from playlist"});
+            } else {
+                console.log("COULD NOT DELETE SONG FROM PLAYLIST");
+                res.send({error: "Error deleting song from playlist"});
+            }
+        }
+    );
+});
+
 app.post('/get_songs_in_playlist', (req, res) => {
     const {playlistID} = req.body;
     connection.query(

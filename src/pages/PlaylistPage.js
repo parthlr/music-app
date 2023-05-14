@@ -88,7 +88,7 @@ export default function PlaylistPage() {
                 <Grid item xs={3}>
                     {
                     songs.map((song) => (
-                        <SongCard song={song} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
+                        <SongCard song={song} inPlaylist={true} playlistID={id} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
                     ))
                     }
                 </Grid>
