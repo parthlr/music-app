@@ -1,84 +1,116 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
+import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import SearchIcon from '@mui/icons-material/Search';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import AddIcon from '@mui/icons-material/Add';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
+const drawerWidth = 240;
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
+function LoginButton() {
+    if (localStorage.getItem("isLoggedIn")) {
+        return (
+            <Button href="/profile" color="inherit">Logout</Button>
+        );
+    }
+    return (
+        <div>
+            <Button href="/register" color="inherit">Register</Button>
+            <Button href="/login" color="inherit">Login</Button>
+        </div>
+    );
+}
 
 export default function NavBar() {
 
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                    >
-                    Music
-                    </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <Button href="/" color="inherit">Home</Button>
-                        <Button href="/profile" color="inherit">Login</Button>
-                    </Box>
-                </Toolbar>
+            <AppBar position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row-reverse', }}>
+                    <Toolbar>
+                        <LoginButton />
+                    </Toolbar>
+                </Box>
             </AppBar>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
+                }}
+                variant="permanent"
+                anchor="left"
+            >
+                <Toolbar>
+                    <Typography variant="h5" noWrap component="div">
+                        MUSIC
+                    </Typography>
+                </Toolbar>
+                <Divider />
+                <List>
+                    <ListItem key="home" disablePadding>
+                        <ListItemButton href="/">
+                            <ListItemIcon>
+                                <HomeIcon />
+                            </ListItemIcon>
+                        <ListItemText primary="Home" />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key="search" disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <SearchIcon />
+                            </ListItemIcon>
+                        <ListItemText primary="Search" />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key="profile" disablePadding>
+                        <ListItemButton href="/profile">
+                            <ListItemIcon>
+                                <AccountCircleIcon />
+                            </ListItemIcon>
+                        <ListItemText primary="Profile" />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+                <Divider />
+                <List>
+                    <ListItem key="create-playlist" disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <AddIcon />
+                            </ListItemIcon>
+                        <ListItemText primary="Create Playlist" />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key="liked-songs" disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                <FavoriteIcon />
+                            </ListItemIcon>
+                        <ListItemText primary="Liked Songs" />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+            </Drawer>
         </Box>
     );
 }

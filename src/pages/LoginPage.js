@@ -20,9 +20,11 @@ export default function LoginPage() {
         }).then((response) => {
             if (response.data.message) {
                 alert(response.data.message);
+                localStorage.setItem("isLoggedIn", false);
             }
             if (response.data.user) {
                 localStorage.setItem("user", response.data.user);
+                localStorage.setItem("isLoggedIn", true);
             }
         });
 
