@@ -13,6 +13,8 @@ import MenuItem from '@mui/joy/MenuItem';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import Add from '@mui/icons-material/Add';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 function ActionMenu(props) {
     if (props.inPlaylist) {
@@ -109,9 +111,14 @@ export default function SongCard(props) {
                     </Typography>
                     <Typography level="body2">{props.song.artist}</Typography>
                 </div>
-                <IconButton variant="outlined" color="neutral" size="small" onClick={handleClick}>
-                    <MoreVert />
-                </IconButton>
+                <Box sx={{ display: 'flex' }}>
+                    <IconButton variant="plain" color="neutral" size="small">
+                        <FavoriteBorderIcon />
+                    </IconButton>
+                    <IconButton variant="plain" color="neutral" size="small" onClick={handleClick}>
+                        <MoreVert />
+                    </IconButton>
+                </Box>
                 <ActionMenu inPlaylist={props.inPlaylist} anchorEl={anchorEl} open={open} handleClose={handleClose} addToPlaylist={addToPlaylist} deleteFromPlaylist={deleteFromPlaylist} />
             </Box>
         </Card>

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import AuthRoute from './components/AuthRoute';
 import axios from "axios";
 import NavBar from "./components/NavBar";
 import HomePage from "./pages/HomePage";
@@ -99,7 +100,7 @@ class App extends React.Component {
                                     <Route exact path='/'><HomePage /></Route>
                                     <Route exact path='/login'><LoginPage /></Route>
                                     <Route exact path='/register'><CreateAccountPage /></Route>
-                                    <Route exact path='/profile'><ProfilePage /></Route>
+                                    <AuthRoute exact path='/profile' component={ProfilePage}/>
                                     <Route exact path='/playlist/:id'><PlaylistPage /></Route>
                                 </Switch>
                             </JoyCssVarsProvider>

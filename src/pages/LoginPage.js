@@ -1,13 +1,20 @@
 import React, {useEffect, useState} from 'react';
+import { useHistory } from "react-router-dom"
 import ReactDOM from 'react-dom/client';
 import Axios from "axios";
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import Button from '@mui/joy/Button';
+import Input from '@mui/joy/Input';
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 
 export default function LoginPage() {
 
-    const [email_r, setEmail] = useState("");
+    const [username_r, setUsername] = useState("");
     const [password_r, setPassword] = useState("");
+
+    const history = useHistory();
 
     Axios.defaults.withCredentials = true;
 
@@ -15,34 +22,45 @@ export default function LoginPage() {
         //event.preventDefault();
         //alert("Email: " + email + " Password: " + password);
         Axios.post("http://localhost:5000/login", {
-            email: email_r,
+            email: username_r,
             password: password_r,
         }).then((response) => {
             if (response.data.message) {
-                alert(response.data.message);
                 localStorage.setItem("isLoggedIn", false);
             }
             if (response.data.user) {
                 localStorage.setItem("user", response.data.user);
                 localStorage.setItem("isLoggedIn", true);
+                history.push('/');
             }
         });
 
     }
 
     return (
-        <div className="login-page">
-            <TextField id="email" label="Email"
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                }}
-            />
-            <TextField id="password" label="Password" type="password" autoComplete="current-password"
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
-            />
-            <Button variant="contained" onClick={login}>Login</Button>
-        </div>
+        <Modal open={true}>
+            <ModalDialog
+                aria-labelledby="basic-modal-dialog-title"
+                aria-describedby="basic-modal-dialog-description"
+                size="lg"
+            >
+                <Typography id="basic-modal-dialog-title" component="h2">
+                    Login
+                </Typography>
+                <Stack spacing={2}>
+                    <Input autoFocus required placeholder="Username"
+                        onChange={(e) => {
+                            setUsername(e.target.value);
+                        }}
+                    />
+                    <Input autoFocus required placeholder="Password" type="password" autoComplete="current-password"
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                    />
+                    <Button onClick={login}>Login</Button>
+                </Stack>
+            </ModalDialog>
+        </Modal>
     );
 }

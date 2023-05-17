@@ -18,13 +18,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import * as Auth from '../services/Auth';
 
 const drawerWidth = 240;
 
 function LoginButton() {
-    if (localStorage.getItem("isLoggedIn")) {
+
+    if (Auth.isLoggedIn()) {
         return (
-            <Button href="/profile" color="inherit">Logout</Button>
+            <Button href="/" color="inherit" onClick={Auth.logout}>Logout</Button>
         );
     }
     return (
