@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { useHistory } from "react-router-dom"
+import { useNavigate } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import Axios from "axios";
 import Button from '@mui/joy/Button';
@@ -14,9 +14,9 @@ export default function LoginPage() {
     const [username_r, setUsername] = useState("");
     const [password_r, setPassword] = useState("");
 
-    const history = useHistory();
-
     Axios.defaults.withCredentials = true;
+
+    const navigate = useNavigate();
 
     const login = () => {
         //event.preventDefault();
@@ -31,10 +31,10 @@ export default function LoginPage() {
             if (response.data.user) {
                 localStorage.setItem("user", response.data.user);
                 localStorage.setItem("isLoggedIn", true);
-                history.push('/');
+                navigate('/');
+                window.location.reload(false);
             }
         });
-
     }
 
     return (

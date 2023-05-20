@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Drawer from '@mui/material/Drawer';
@@ -39,6 +40,15 @@ function LoginButton() {
 
 export default function NavBar() {
 
+    const navigate = useNavigate();
+
+    const goToHome = () => {
+        navigate('/');
+    }
+
+    const goToProfile = () => {
+        navigate('/profile');
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -69,7 +79,7 @@ export default function NavBar() {
                 <Divider />
                 <List>
                     <ListItem key="home" disablePadding>
-                        <ListItemButton href="/">
+                        <ListItemButton onClick={goToHome}>
                             <ListItemIcon>
                                 <HomeIcon />
                             </ListItemIcon>
@@ -85,7 +95,7 @@ export default function NavBar() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem key="profile" disablePadding>
-                        <ListItemButton href="/profile">
+                        <ListItemButton onClick={goToProfile}>
                             <ListItemIcon>
                                 <AccountCircleIcon />
                             </ListItemIcon>

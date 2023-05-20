@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
 import AuthRoute from './components/AuthRoute';
 import axios from "axios";
 import NavBar from "./components/NavBar";
@@ -80,36 +80,43 @@ const DarkMode = () => {
   return null;
 };
 
+function Base() {
+    return (
+        <BrowserRouter>
+            <div>
+                <MaterialCssVarsProvider defaultMode="dark" theme={{ [THEME_ID]: materialTheme }}>
+                    <JoyCssVarsProvider defaultMode="dark">
+                        <CssBaseline enableColorScheme />
+                        <DarkMode />
+                        <NavBar />
+                        <Routes>
+                            <Route exact path='/' element={<HomePage />} />
+                            <Route exact path='/login' element={<LoginPage />} />
+                            <Route exact path='/register' element={<CreateAccountPage />} />
+                            <Route exact path='/profile' element={
+                                <AuthRoute redirectTo="/login"><ProfilePage /></AuthRoute>
+                            } />
+                            <Route exact path='/playlist/:id' element={<PlaylistPage />} />
+                        </Routes>
+                    </JoyCssVarsProvider>
+                </MaterialCssVarsProvider>
+            </div>
+        </BrowserRouter>
+    );
+}
+
 
 class App extends React.Component {
     render() {
-        const darkTheme = createTheme({
-          palette: {
-            mode: 'dark',
-          },
-        });
+
+
         return (
             <div className="app">
-                    <BrowserRouter>
-                        <MaterialCssVarsProvider defaultMode="dark" theme={{ [THEME_ID]: materialTheme }}>
-                            <JoyCssVarsProvider defaultMode="dark">
-                                <CssBaseline enableColorScheme />
-                                <DarkMode />
-                                <NavBar />
-                                <Switch>
-                                    <Route exact path='/'><HomePage /></Route>
-                                    <Route exact path='/login'><LoginPage /></Route>
-                                    <Route exact path='/register'><CreateAccountPage /></Route>
-                                    <AuthRoute exact path='/profile' component={ProfilePage}/>
-                                    <Route exact path='/playlist/:id'><PlaylistPage /></Route>
-                                </Switch>
-                            </JoyCssVarsProvider>
-                        </MaterialCssVarsProvider>
-                    </BrowserRouter>
+                <Base />
             </div>
         );
     }
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<BrowserRouter><App /></BrowserRouter>);
+root.render(<App />);
