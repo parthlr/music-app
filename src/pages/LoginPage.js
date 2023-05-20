@@ -14,6 +14,8 @@ export default function LoginPage() {
     const [username_r, setUsername] = useState("");
     const [password_r, setPassword] = useState("");
 
+    const [error_message, setErrorMessage] = useState("");
+
     Axios.defaults.withCredentials = true;
 
     const navigate = useNavigate();
@@ -27,6 +29,7 @@ export default function LoginPage() {
         }).then((response) => {
             if (response.data.message) {
                 localStorage.setItem("isLoggedIn", false);
+                setErrorMessage(response.data.message);
             }
             if (response.data.user) {
                 localStorage.setItem("user", response.data.user);
@@ -46,6 +49,9 @@ export default function LoginPage() {
             >
                 <Typography id="basic-modal-dialog-title" component="h2">
                     Login
+                </Typography>
+                <Typography color="danger" >
+                    {error_message}
                 </Typography>
                 <Stack spacing={2}>
                     <Input autoFocus required placeholder="Username"

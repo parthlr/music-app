@@ -1,12 +1,14 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
+import Axios from "axios";
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Drawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
+import Input from '@mui/joy/Input';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
@@ -23,7 +25,15 @@ import * as Auth from '../services/Auth';
 
 const drawerWidth = 240;
 
-function LoginButton() {
+function LoginButton(props) {
+
+    const goToLogin = () => {
+        props.navigate('/login');
+    }
+
+    const goToRegister = () => {
+        props.navigate('/register');
+    }
 
     if (Auth.isLoggedIn()) {
         return (
@@ -32,8 +42,56 @@ function LoginButton() {
     }
     return (
         <div>
-            <Button href="/register" color="inherit">Register</Button>
-            <Button href="/login" color="inherit">Login</Button>
+            <Button color="inherit" onClick={goToRegister}>Register</Button>
+            <Button color="inherit" onClick={goToLogin}>Login</Button>
+        </div>
+    );
+}
+
+function AccountPlaylists(props) {
+    useEffect(() => {
+        getPlaylists();
+    },[]);
+
+    const [playlists, setPlaylists] = useState([]);
+
+    const getPlaylists = async() => {
+        Axios.post('http://localhost:5000/get_user_playlists', {
+            userID: localStorage.getItem("user")
+        }).then((response) => {
+            if (!response.data.err) {
+                setPlaylists(response.data);
+                console.log("GOT PROFILE PLAYLIST DATA");
+            } else {
+                console.log(response.data.err);
+            }
+        });
+    }
+
+    const viewPlaylist = (id) => {
+        props.navigate('/playlist/' + id);
+    }
+
+    if (!Auth.isLoggedIn()) {
+        return null;
+    }
+    return (
+        <div>
+            <Divider />
+            <List>
+                <ListItem>
+                    <ListItemText primary="Playlists" />
+                </ListItem>
+                {
+                    playlists.map((playlist) => (
+                        <ListItem disablePadding key={"id_" + playlist.playlistID + "_name_" + playlist.name}>
+                            <ListItemButton onClick={() => viewPlaylist(playlist.playlistID)}>
+                                <ListItemText primary={playlist.name}/>
+                            </ListItemButton>
+                        </ListItem>
+                    ))
+                }
+            </List>
         </div>
     );
 }
@@ -46,18 +104,30 @@ export default function NavBar() {
         navigate('/');
     }
 
+    const goToSearch = () => {
+        navigate('/search');
+    }
+
     const goToProfile = () => {
         navigate('/profile');
+    }
+
+    const searchBarTyped = () => {
+        if (window.location.pathname != "/search") {
+            navigate('/search');
+        }
     }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
-                <Box sx={{ display: 'flex', flexDirection: 'row-reverse', }}>
-                    <Toolbar>
-                        <LoginButton />
-                    </Toolbar>
-                </Box>
+                <Toolbar>
+                    <Input startDecorator={<SearchIcon />} onChange={searchBarTyped}/>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Box sx={{ display: 'flex', flexDirection: 'row-reverse', }}>
+                        <LoginButton navigate={navigate} />
+                    </Box>
+                </Toolbar>
             </AppBar>
             <Drawer
                 sx={{
@@ -87,7 +157,7 @@ export default function NavBar() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem key="search" disablePadding>
-                        <ListItemButton>
+                        <ListItemButton onClick={goToSearch}>
                             <ListItemIcon>
                                 <SearchIcon />
                             </ListItemIcon>
@@ -122,6 +192,7 @@ export default function NavBar() {
                         </ListItemButton>
                     </ListItem>
                 </List>
+                <AccountPlaylists navigate={navigate}/>
             </Drawer>
         </Box>
     );

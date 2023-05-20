@@ -5,6 +5,7 @@ import AuthRoute from './components/AuthRoute';
 import axios from "axios";
 import NavBar from "./components/NavBar";
 import HomePage from "./pages/HomePage";
+import SearchPage from "./pages/SearchPage";
 import LoginPage from "./pages/LoginPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -91,6 +92,7 @@ function Base() {
                         <NavBar />
                         <Routes>
                             <Route exact path='/' element={<HomePage />} />
+                            <Route exact path='/search' element={<SearchPage />} />
                             <Route exact path='/login' element={<LoginPage />} />
                             <Route exact path='/register' element={<CreateAccountPage />} />
                             <Route exact path='/profile' element={

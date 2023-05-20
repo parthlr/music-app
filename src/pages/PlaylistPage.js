@@ -17,11 +17,11 @@ export default function PlaylistPage() {
 
     const {id} = useParams();
 
-    useEffect(() => {
+    useEffect((e) => {
         setPlaylistID(id);
         getPlaylist();
         getSongsInPlaylist();
-    },[]);
+    },[id]);
 
     const [pID, setPlaylistID] = useState("");
     const [playlist, setPlaylist] = useState([]);
