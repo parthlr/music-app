@@ -21,6 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import AspectRatio from '@mui/joy/AspectRatio';
 import * as Auth from '../services/Auth';
 
 const drawerWidth = 240;
@@ -86,6 +87,15 @@ function AccountPlaylists(props) {
                     playlists.map((playlist) => (
                         <ListItem disablePadding key={"id_" + playlist.playlistID + "_name_" + playlist.name}>
                             <ListItemButton onClick={() => viewPlaylist(playlist.playlistID)}>
+                                <AspectRatio ratio="1" sx={{ maxWidth: 20, my: 2 }}>
+                                    <img
+                                        src="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=1380&t=st=1684630316~exp=1684630916~hmac=0e441d6880fb900e383a404ce82e110ebef60888b70c8b12c55a46c2e47dd274"
+                                        srcSet="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=1380&t=st=1684630316~exp=1684630916~hmac=0e441d6880fb900e383a404ce82e110ebef60888b70c8b12c55a46c2e47dd274 2x"
+                                        loading="lazy"
+                                        alt=""
+                                        width="10px"
+                                    />
+                                </AspectRatio>
                                 <ListItemText primary={playlist.name}/>
                             </ListItemButton>
                         </ListItem>

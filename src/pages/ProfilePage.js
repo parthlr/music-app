@@ -127,18 +127,19 @@ export default function ProfilePage() {
             </Grid>
             <Grid
                 container
-                spacing={0}
-                direction="column"
+                spacing={1}
+                direction="row"
                 alignItems="center"
                 justifyContent="center"
+                wrap="wrap"
             >
-                <Grid item xs={3}>
-                    {
-                    playlists.map((playlist) => (
+                {
+                playlists.map((playlist) => (
+                    <Grid item xs={6} align="center">
                         <PlaylistCard playlist={playlist} />
-                    ))
-                    }
-                </Grid>
+                    </Grid>
+                ))
+                }
             </Grid>
             <Modal open={playlistOpen} onClose={() => setPlaylistOpen(false)}>
                 <ModalDialog
