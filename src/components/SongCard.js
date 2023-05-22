@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Axios from "axios";
 import Box from '@mui/material/Box';
 import Button from '@mui/joy/Button';
@@ -61,10 +61,22 @@ function ActionMenu(props) {
     );
 }
 
+function LikeButton(props) {
+    if (props.isLiked) {
+        return (<FavoriteIcon color="success"/>);
+    }
+    return (<FavoriteBorderIcon />);
+}
+
 export default function SongCard(props) {
+    useEffect(() => {
+        isSongLiked();
+    },[]);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
+    const [liked, setLiked] = useState(false);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -91,6 +103,51 @@ export default function SongCard(props) {
         window.location.reload(false);
     }
 
+    const isSongLiked = async() => {
+        Axios.post('http://localhost:5000/is_liked', {
+            userID: localStorage.getItem("user"),
+            songID: props.song.songID,
+        }).then((response) => {
+            if (response.data.message) {
+                setLiked(true);
+                console.log(response);
+            } else {
+                setLiked(false);
+                console.log(response);
+            }
+        });
+    }
+
+    const toggleLike = () => {
+        if (!liked) {
+            Axios.post('http://localhost:5000/add_like', {
+                userID: localStorage.getItem("user"),
+                songID: props.song.songID,
+            }).then((response) => {
+                if (!response.data.error) {
+                    setLiked(true);
+                    console.log(response);
+                } else {
+                    setLiked(false);
+                    console.log(response);
+                }
+            });
+        } else {
+            Axios.post('http://localhost:5000/delete_like', {
+                userID: localStorage.getItem("user"),
+                songID: props.song.songID,
+            }).then((response) => {
+                if (!response.data.error) {
+                    setLiked(false);
+                    console.log(response);
+                } else {
+                    setLiked(true);
+                    console.log(response);
+                }
+            });
+        }
+    }
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -112,8 +169,8 @@ export default function SongCard(props) {
                     <Typography level="body2">{props.song.artist}</Typography>
                 </div>
                 <Box sx={{ display: 'flex' }}>
-                    <IconButton variant="plain" color="neutral" size="small">
-                        <FavoriteBorderIcon />
+                    <IconButton variant="plain" color="neutral" size="small" onClick={toggleLike}>
+                        <LikeButton isLiked={liked}/>
                     </IconButton>
                     <IconButton variant="plain" color="neutral" size="small" onClick={handleClick}>
                         <MoreVert />

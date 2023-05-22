@@ -242,6 +242,62 @@ app.post('/get_songs_in_playlist', (req, res) => {
     );
 });
 
+app.post('/is_liked', (req, res) => {
+    const {userID, songID} = req.body;
+    connection.query(
+        'SELECT * FROM user_likes WHERE userID = ? AND songID = ?',
+        [userID, songID],
+        (err, rows) => {
+            if (!err) {
+                if (rows.length >= 1) {
+                    console.log("FOUND LIKES FOR SONG");
+                    res.send({message: "Song is liked"});
+                } else {
+                    console.log("COULD NOT FIND LIKE FOR SONG");
+                    res.send({error: "Song is not liked"});
+                }
+            } else {
+                console.log("ERROR FINDING IF SONG IS LIKED");
+                res.send({error: "Could not find if song is liked"});
+            }
+        }
+    );
+});
+
+app.post('/add_like', (req, res) => {
+    const {userID, songID} = req.body;
+    connection.query(
+        'INSERT INTO user_likes (userID, songID) VALUES (?,?)',
+        [userID, songID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY LIKED SONG");
+                res.send({message: "Added song to likes"});
+            } else {
+                console.log("COULD NOT LIKE SONG");
+                res.send({error: "Error liking song"});
+            }
+        }
+    );
+});
+
+app.post('/delete_like', (req, res) => {
+    const {userID, songID} = req.body;
+    connection.query(
+        'DELETE FROM user_likes WHERE userID = ? AND songID = ?',
+        [userID, songID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY REMOVED LIKE FROM SONG");
+                res.send({message: "Removed song from likes"});
+            } else {
+                console.log("COULD NOT REMOVE LIKE FROM SONG");
+                res.send({error: "Error removing like from song"});
+            }
+        }
+    );
+});
+
 app.get('/get_songs', (req, res) => {
     connection.query('SELECT * FROM Songs ORDER BY RAND() LIMIT 10',
         (err, rows) => {

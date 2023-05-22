@@ -89,7 +89,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="profile-page" style={{ width: "100%" }}>
+        <div className="profile-page">
             <br /><br /><br /><br />
             <Grid container direction="column" alignItems="center" justify="center">
                 <Box
@@ -115,7 +115,7 @@ export default function ProfilePage() {
                         justifyContent: 'space-between',
                         p: 1,
                         m: 1,
-                        width: 800,
+                        width: 600,
                     }}
                 >
                     <Typography level="h4">Playlists</Typography>
@@ -125,6 +125,7 @@ export default function ProfilePage() {
                 </Box>
                 <br />
             </Grid>
+            <br /><br />
             <Grid
                 container
                 spacing={1}
@@ -133,13 +134,24 @@ export default function ProfilePage() {
                 justifyContent="center"
                 wrap="wrap"
             >
-                {
-                playlists.map((playlist) => (
-                    <Grid item xs={6} align="center">
-                        <PlaylistCard playlist={playlist} />
+                <Box sx={{ width: 600, display: 'flex', justifyContent: 'space-between' }}>
+                    <Grid
+                        container
+                        spacing={1}
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="center"
+                        wrap="wrap"
+                    >
+                        {
+                        playlists.map((playlist) => (
+                            <Grid item xs={6} align="center" style={{ width: "300px"}}>
+                                <PlaylistCard playlist={playlist} />
+                            </Grid>
+                        ))
+                        }
                     </Grid>
-                ))
-                }
+                </Box>
             </Grid>
             <Modal open={playlistOpen} onClose={() => setPlaylistOpen(false)}>
                 <ModalDialog

@@ -10,7 +10,7 @@ import AspectRatio from '@mui/joy/AspectRatio';
 export default function PlaylistCard(props) {
 
     return (
-        <div className="playlist-card" display="flex">
+        <div className="playlist-card">
             <Card variant="outlined" sx={{ width: 250 }}>
                 <AspectRatio ratio="1" sx={{ maxWidth: 250, my: 2 }}>
                     <img
