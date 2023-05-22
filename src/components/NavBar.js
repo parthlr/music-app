@@ -16,6 +16,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -87,17 +88,8 @@ function AccountPlaylists(props) {
                     playlists.map((playlist) => (
                         <ListItem disablePadding key={"id_" + playlist.playlistID + "_name_" + playlist.name}>
                             <ListItemButton onClick={() => viewPlaylist(playlist.playlistID)}>
-                                <ListItemIcon>
-                                    <img
-                                        src="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=1380&t=st=1684630316~exp=1684630916~hmac=0e441d6880fb900e383a404ce82e110ebef60888b70c8b12c55a46c2e47dd274"
-                                        srcSet="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=1380&t=st=1684630316~exp=1684630916~hmac=0e441d6880fb900e383a404ce82e110ebef60888b70c8b12c55a46c2e47dd274 2x"
-                                        loading="lazy"
-                                        alt=""
-                                        width="50px"
-                                        height="50px"
-                                    />
-                                </ListItemIcon>
-                                <ListItemText primary={playlist.name}/>
+                                <Avatar variant="rounded" sx={{ width: 50, height: 50, borderRadius: 2 }}src="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=1380&t=st=1684630316~exp=1684630916~hmac=0e441d6880fb900e383a404ce82e110ebef60888b70c8b12c55a46c2e47dd274" />
+                                <ListItemText sx={{ pl: "8px" }} primary={playlist.name}/>
                             </ListItemButton>
                         </ListItem>
                     ))
@@ -140,71 +132,76 @@ export default function NavBar() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
-                        width: drawerWidth,
-                        boxSizing: 'border-box',
-                    },
-                }}
-                variant="permanent"
-                anchor="left"
+            <Box
+                component="nav"
+                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
             >
-                <Toolbar>
-                    <Typography variant="h5" noWrap component="div">
-                        MUSIC
-                    </Typography>
-                </Toolbar>
-                <Divider />
-                <List>
-                    <ListItem key="home" disablePadding>
-                        <ListItemButton onClick={goToHome}>
-                            <ListItemIcon>
-                                <HomeIcon />
-                            </ListItemIcon>
-                        <ListItemText primary="Home" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem key="search" disablePadding>
-                        <ListItemButton onClick={goToSearch}>
-                            <ListItemIcon>
-                                <SearchIcon />
-                            </ListItemIcon>
-                        <ListItemText primary="Search" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem key="profile" disablePadding>
-                        <ListItemButton onClick={goToProfile}>
-                            <ListItemIcon>
-                                <AccountCircleIcon />
-                            </ListItemIcon>
-                        <ListItemText primary="Profile" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-                <Divider />
-                <List>
-                    <ListItem key="create-playlist" disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <AddIcon />
-                            </ListItemIcon>
-                        <ListItemText primary="Create Playlist" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem key="liked-songs" disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <FavoriteIcon />
-                            </ListItemIcon>
-                        <ListItemText primary="Liked Songs" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-                <AccountPlaylists navigate={navigate}/>
-            </Drawer>
+                <Drawer
+                    sx={{
+                        width: drawerWidth,
+                        flexShrink: 0,
+                        '& .MuiDrawer-paper': {
+                            width: drawerWidth,
+                            boxSizing: 'border-box',
+                        },
+                    }}
+                    variant="permanent"
+                    anchor="left"
+                >
+                    <Toolbar>
+                        <Typography variant="h5" noWrap component="div">
+                            MUSIC
+                        </Typography>
+                    </Toolbar>
+                    <Divider />
+                    <List>
+                        <ListItem key="home" disablePadding>
+                            <ListItemButton onClick={goToHome}>
+                                <ListItemIcon>
+                                    <HomeIcon />
+                                </ListItemIcon>
+                            <ListItemText primary="Home" />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem key="search" disablePadding>
+                            <ListItemButton onClick={goToSearch}>
+                                <ListItemIcon>
+                                    <SearchIcon />
+                                </ListItemIcon>
+                            <ListItemText primary="Search" />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem key="profile" disablePadding>
+                            <ListItemButton onClick={goToProfile}>
+                                <ListItemIcon>
+                                    <AccountCircleIcon />
+                                </ListItemIcon>
+                            <ListItemText primary="Profile" />
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                    <Divider />
+                    <List>
+                        <ListItem key="create-playlist" disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <AddIcon />
+                                </ListItemIcon>
+                            <ListItemText primary="Create Playlist" />
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem key="liked-songs" disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <FavoriteIcon />
+                                </ListItemIcon>
+                            <ListItemText primary="Liked Songs" />
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                    <AccountPlaylists navigate={navigate}/>
+                </Drawer>
+            </Box>
         </Box>
     );
 }

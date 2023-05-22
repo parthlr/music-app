@@ -69,9 +69,9 @@ function LikeButton(props) {
 }
 
 export default function SongCard(props) {
-    useEffect(() => {
+    useEffect((e) => {
         isSongLiked();
-    },[]);
+    },[props.song.songID]);
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
