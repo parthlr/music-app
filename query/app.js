@@ -298,6 +298,24 @@ app.post('/delete_like', (req, res) => {
     );
 });
 
+app.post('/get_liked_songs', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT * FROM Songs WHERE songID IN (SELECT songID FROM user_likes WHERE userID = ?)',
+        userID,
+        (err, rows) => {
+            if (!err) {
+                console.log("SUCCESSFULLY GOT LIKED SONGS");
+                res.send(rows);
+            } else {
+                console.log("FAILED TO GET LIKED SONGS");
+                console.log(err);
+                res.send({error: "Error getting liked songs"});
+            }
+        }
+    )
+});
+
 app.get('/get_songs', (req, res) => {
     connection.query('SELECT * FROM Songs ORDER BY RAND() LIMIT 10',
         (err, rows) => {

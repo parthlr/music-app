@@ -115,6 +115,10 @@ export default function NavBar() {
         navigate('/profile');
     }
 
+    const goToLikedSongs = () => {
+        navigate('/liked-songs');
+    }
+
     const searchBarTyped = () => {
         if (window.location.pathname != "/search") {
             navigate('/search');
@@ -191,7 +195,7 @@ export default function NavBar() {
                             </ListItemButton>
                         </ListItem>
                         <ListItem key="liked-songs" disablePadding>
-                            <ListItemButton>
+                            <ListItemButton onClick={goToLikedSongs}>
                                 <ListItemIcon>
                                     <FavoriteIcon />
                                 </ListItemIcon>

@@ -8,7 +8,7 @@ import Link from '@mui/joy/Link';
 import AspectRatio from '@mui/joy/AspectRatio';
 
 export default function PlaylistCard(props) {
-
+    
     return (
         <div className="playlist-card">
             <Card variant="outlined" sx={{ width: 250 }}>

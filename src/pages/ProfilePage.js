@@ -2,12 +2,14 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import Axios from "axios";
 import Button from '@mui/joy/Button';
+import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import FormLabel from '@mui/joy/FormLabel';
 import Stack from '@mui/joy/Stack';
-import Add from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 import Typography from '@mui/joy/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -91,68 +93,46 @@ export default function ProfilePage() {
     return (
         <div className="profile-page">
             <br /><br /><br /><br />
-            <Grid container direction="column" alignItems="center" justify="center">
+            <Grid container direction="column" sx={{ width: `calc(100% - 240px)`, ml: "240px" }}>
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'space-between',
                         p: 1,
                         m: 1,
-                        width: 800,
                     }}
                 >
-                    <Typography level="h2">{profileName}</Typography>
-                    <Button onClick={() => setProfileOpen(true)}>
-                        <Typography id="basic-modal-dialog-title" component="h1">Edit</Typography>
-                    </Button>
+                    <Typography level="h2" sx={{ pr: "20px" }}>{profileName}</Typography>
+                    <IconButton variant="outlined" color="neutral" size="lg" onClick={() => setProfileOpen(true)}>
+                        <SettingsIcon />
+                    </IconButton>
                 </Box>
             </Grid>
             <br /><br /><br /><br />
-            <Grid container direction="column" alignItems="center" justify="center">
+            <Grid container direction="column" sx={{ width: `calc(100% - 240px)`, ml: "240px" }}>
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'space-between',
                         p: 1,
                         m: 1,
-                        width: 600,
                     }}
                 >
-                    <Typography level="h4">Playlists</Typography>
-                    <Button onClick={() => setPlaylistOpen(true)}>
-                        <Typography id="basic-modal-dialog-title" component="h1">+</Typography>
-                    </Button>
+                    <Typography level="h4" sx={{ pr: "20px" }}>Playlists</Typography>
+                    <IconButton variant="outlined" color="neutral" onClick={() => setPlaylistOpen(true)}>
+                        <AddIcon />
+                    </IconButton>
                 </Box>
                 <br />
             </Grid>
             <br /><br />
-            <Grid
-                container
-                spacing={1}
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
-                wrap="wrap"
-            >
-                <Box sx={{ width: 600, display: 'flex', justifyContent: 'space-between' }}>
-                    <Grid
-                        container
-                        spacing={1}
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="center"
-                        wrap="wrap"
-                    >
-                        {
-                        playlists.map((playlist) => (
-                            <Grid item xs={6} align="center" style={{ width: "300px"}}>
-                                <PlaylistCard playlist={playlist} />
-                            </Grid>
-                        ))
-                        }
-                    </Grid>
-                </Box>
-            </Grid>
+            <Box sx={{ display: 'flex', ml: "240px", width: `calc(100% - 240px)`}}>
+                {
+                    playlists.map((playlist) => (
+                        <Box sx={{ pl: "10px", pr: "20px" }}>
+                            <PlaylistCard playlist={playlist} />
+                        </Box>
+                    ))
+                }
+            </Box>
             <Modal open={playlistOpen} onClose={() => setPlaylistOpen(false)}>
                 <ModalDialog
                     aria-labelledby="basic-modal-dialog-title"

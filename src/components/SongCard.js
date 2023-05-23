@@ -15,6 +15,7 @@ import DeleteForever from '@mui/icons-material/DeleteForever';
 import Add from '@mui/icons-material/Add';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { pink } from '@mui/material/colors';
 
 function ActionMenu(props) {
     if (props.inPlaylist) {
@@ -63,7 +64,7 @@ function ActionMenu(props) {
 
 function LikeButton(props) {
     if (props.isLiked) {
-        return (<FavoriteIcon color="success"/>);
+        return (<FavoriteIcon sx={{ color: pink[500] }}/>);
     }
     return (<FavoriteBorderIcon />);
 }

@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
 import ProfilePage from "./pages/ProfilePage";
 import PlaylistPage from "./pages/PlaylistPage";
+import LikedSongsPage from "./pages/LikedSongsPage";
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -97,6 +98,9 @@ function Base() {
                             <Route exact path='/register' element={<CreateAccountPage />} />
                             <Route exact path='/profile' element={
                                 <AuthRoute redirectTo="/login"><ProfilePage /></AuthRoute>
+                            } />
+                            <Route exact path='/liked-songs' element={
+                                <AuthRoute redirectTo="/login"><LikedSongsPage /></AuthRoute>
                             } />
                             <Route exact path='/playlist/:id' element={<PlaylistPage />} />
                         </Routes>
