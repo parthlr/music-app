@@ -5,11 +5,26 @@ import Axios from "axios";
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
-import IconButton from '@mui/joy/IconButton';
+import CardCover from '@mui/joy/CardCover';
+import CardContent from '@mui/joy/CardContent';
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Menu from '@mui/joy/Menu';
+import MenuItem from '@mui/joy/MenuItem';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/joy/IconButton';
+import MoreHoriz from '@mui/icons-material/MoreHoriz';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ShareIcon from '@mui/icons-material/Share';
+import DeleteForever from '@mui/icons-material/DeleteForever';
 
+import LikeButton from '../components/LikeButton';
 import SongCard from '../components/SongCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 
@@ -31,6 +46,11 @@ export default function PlaylistPage() {
     const [clickedSong, setClickedSong] = useState(null);
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [liked, setLiked] = useState(false);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const optionsOpen = Boolean(anchorEl);
 
     const getPlaylist = async() => {
         Axios.post('http://localhost:5000/playlist', {
@@ -61,39 +81,105 @@ export default function PlaylistPage() {
         });
     }
 
+    const toggleLike = () => {
+        if (!liked) {
+            setLiked(true);
+        } else {
+            setLiked(false);
+        }
+    }
+
+    const handleOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleOptionsClose = () => {
+        setAnchorEl(null);
+    };
+
     return (
         <div className="playlist-page">
-            <br /><br /><br /><br />
-            <Grid container direction="column" alignItems="center" justify="center">
-                <Box
+            <Card variant="plain" sx={{ minHeight: '400px', width: `calc(100% - 240px)`, ml: "240px" }}>
+                <CardCover>
+                    <img
+                        src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg"
+                        srcSet="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg 2x"
+                        loading="lazy"
+                        alt=""
+                    />
+                </CardCover>
+                <CardCover
                     sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        p: 1,
-                        m: 1,
-                        width: 800,
+                        background:
+                        'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
                     }}
-                >
-                    <Typography level="h2">{playlist.name}</Typography>
-
-                </Box>
-            </Grid>
-            <Grid
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                justifyContent="center"
-            >
-                <Grid item xs={3}>
-                    {
-                    songs.map((song) => (
-                        <SongCard song={song} inPlaylist={true} playlistID={id} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
-                    ))
-                    }
-                </Grid>
-            </Grid>
+                />
+                <CardContent sx={{ justifyContent: 'flex-end' }}>
+                    <Typography sx={{ fontSize: 80 }}level="h1">{playlist.name}</Typography>
+                </CardContent>
+            </Card>
+            <br />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }}>
+                <div>
+                    <IconButton variant="plain" color="neutral" onClick={toggleLike}>
+                        <LikeButton isLiked={liked} fontSize="large"/>
+                    </IconButton>
+                    <IconButton variant="plain" color="neutral" onClick={handleOptionsClick}>
+                        <MoreHoriz fontSize="large"/>
+                    </IconButton>
+                </div>
+                <IconButton variant="plain" color="neutral">
+                    <SettingsIcon fontSize="large"/>
+                </IconButton>
+            </Box>
+            <br /><br />
+            <List sx={{ pl: "50px", pr: "50px" }}>
+                <ListItem>
+                    <Grid
+                        container
+                        spacing={0}
+                        sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}
+                    >
+                        <Grid item xs={3}>
+                            <ListItemContent>Title</ListItemContent>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <ListItemContent>Artist</ListItemContent>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <ListItemContent>Released</ListItemContent>
+                        </Grid>
+                    </Grid>
+                </ListItem>
+                <Divider sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }} />
+                {
+                songs.map((song) => (
+                    <SongCard song={song} inPlaylist={true} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
+                ))
+                }
+            </List>
             <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={optionsOpen}
+                onClose={handleOptionsClose}
+                aria-labelledby="basic-demo-button"
+                placement="bottom-start"
+            >
+                <MenuItem>
+                    <ListItemDecorator sx={{ color: 'inherit' }}>
+                        <ShareIcon />
+                    </ListItemDecorator>{" "}
+                    Share
+                </MenuItem>
+                <MenuItem variant="soft" color="danger">
+                    <ListItemDecorator sx={{ color: 'inherit' }}>
+                        <DeleteForever />
+                    </ListItemDecorator>
+                    Remove
+                </MenuItem>
+            </Menu>
         </div>
     );
 }

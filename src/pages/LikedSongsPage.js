@@ -8,6 +8,11 @@ import CardCover from '@mui/joy/CardCover';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import Table from '@mui/joy/Table';
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/joy/IconButton';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -63,47 +68,31 @@ export default function LikedSongsPage() {
                 </CardContent>
             </Card>
             <br /><br />
-            <Table hoverRow stickyHeader variant="plain" borderAxis="none" size="lg" sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }}>
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Artist</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        likedSongs.map((song) => (
-                            <tr>
-                                <td>{song.title}</td>
-                                <td>{song.artist}</td>
-                                <td>
-                                    <IconButton variant="plain" color="neutral" size="small">
-                                        <FavoriteBorderIcon />
-                                    </IconButton>
-                                    <IconButton variant="plain" color="neutral" size="small">
-                                        <MoreVert />
-                                    </IconButton>
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </Table>
-            <Grid
-                container
-                spacing={0}
-                direction="column"
-                sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}
-            >
-                <Grid item xs={3}>
-                    {
-                    likedSongs.map((song) => (
-                        <SongCard song={song} inPlaylist={false} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
-                    ))
-                    }
-                </Grid>
-            </Grid>
+            <List sx={{ pl: "50px", pr: "50px" }}>
+                <ListItem>
+                    <Grid
+                        container
+                        spacing={0}
+                        sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}
+                    >
+                        <Grid item xs={3}>
+                            <ListItemContent>Title</ListItemContent>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <ListItemContent>Artist</ListItemContent>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <ListItemContent>Released</ListItemContent>
+                        </Grid>
+                    </Grid>
+                </ListItem>
+                <Divider sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }} />
+                {
+                likedSongs.map((song) => (
+                    <SongCard song={song} inPlaylist={false} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
+                ))
+                }
+            </List>
             <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
         </div>
     );

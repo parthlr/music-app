@@ -102,8 +102,8 @@ export default function ProfilePage() {
                     }}
                 >
                     <Typography level="h2" sx={{ pr: "20px" }}>{profileName}</Typography>
-                    <IconButton variant="outlined" color="neutral" size="lg" onClick={() => setProfileOpen(true)}>
-                        <SettingsIcon />
+                    <IconButton variant="plain" color="neutral" size="lg" onClick={() => setProfileOpen(true)}>
+                        <SettingsIcon fontSize="large"/>
                     </IconButton>
                 </Box>
             </Grid>
