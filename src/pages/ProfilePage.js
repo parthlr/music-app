@@ -13,7 +13,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import Typography from '@mui/joy/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+
 import PlaylistCard from '../components/PlaylistCard';
+import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
 
 export default function ProfilePage() {
     useEffect(() => {
@@ -24,7 +26,7 @@ export default function ProfilePage() {
     const [profile, setProfile] = useState([]);
     const [playlists, setPlaylists] = useState([]);
 
-    const [playlistOpen, setPlaylistOpen] = useState(false);
+    const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
 
     const [playlistName, setPlaylistName] = useState("");
@@ -58,20 +60,6 @@ export default function ProfilePage() {
                 console.log(response.data.err);
             }
         });
-    }
-
-    const createPlaylist = () => {
-        //var current_user = parseInt(localStorage.getItem("user"));
-        //console.log(current_user);
-
-        Axios.post("http://localhost:5000/create_playlist", {
-            name: playlistName,
-            userID: localStorage.getItem("user"),
-        }).then((response) => {
-            console.log(response);
-        });
-
-        setPlaylistOpen(false);
     }
 
     const editProfile = () => {
@@ -117,7 +105,7 @@ export default function ProfilePage() {
                     }}
                 >
                     <Typography level="h4" sx={{ pr: "20px" }}>Playlists</Typography>
-                    <IconButton variant="outlined" color="neutral" onClick={() => setPlaylistOpen(true)}>
+                    <IconButton variant="outlined" color="neutral" onClick={() => setPlaylistDialogOpen(true)}>
                         <AddIcon />
                     </IconButton>
                 </Box>
@@ -133,25 +121,7 @@ export default function ProfilePage() {
                     ))
                 }
             </Box>
-            <Modal open={playlistOpen} onClose={() => setPlaylistOpen(false)}>
-                <ModalDialog
-                    aria-labelledby="basic-modal-dialog-title"
-                    aria-describedby="basic-modal-dialog-description"
-                    sx={{ maxWidth: 500 }}
-                >
-                <Typography id="basic-modal-dialog-title" component="h2">
-                    Create new playlist
-                </Typography>
-                <Stack spacing={2}>
-                    <Input autoFocus required placeholder="Name"
-                        onChange={(e) => {
-                            setPlaylistName(e.target.value);
-                        }}
-                    />
-                    <Button onClick={createPlaylist}>Create</Button>
-                </Stack>
-                </ModalDialog>
-            </Modal>
+            <CreatePlaylistDialog open={playlistDialogOpen} close={() => setPlaylistDialogOpen(false)}/>
             <Modal open={profileOpen} onClose={() => setProfileOpen(false)}>
                 <ModalDialog
                     aria-labelledby="basic-modal-dialog-title"

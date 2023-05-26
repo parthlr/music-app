@@ -24,6 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AspectRatio from '@mui/joy/AspectRatio';
 import * as Auth from '../services/Auth';
+import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
 
 const drawerWidth = 240;
 
@@ -101,6 +102,8 @@ function AccountPlaylists(props) {
 
 export default function NavBar() {
 
+    const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
+
     const navigate = useNavigate();
 
     const goToHome = () => {
@@ -126,86 +129,89 @@ export default function NavBar() {
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
-                <Toolbar>
-                    <Input startDecorator={<SearchIcon />} onChange={searchBarTyped}/>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: 'flex', flexDirection: 'row-reverse', }}>
-                        <LoginButton navigate={navigate} />
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            <Box
-                component="nav"
-                sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-            >
-                <Drawer
-                    sx={{
-                        width: drawerWidth,
-                        flexShrink: 0,
-                        '& .MuiDrawer-paper': {
-                            width: drawerWidth,
-                            boxSizing: 'border-box',
-                        },
-                    }}
-                    variant="permanent"
-                    anchor="left"
-                >
+        <div className="nav-bar">
+            <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
                     <Toolbar>
-                        <Typography variant="h5" noWrap component="div">
-                            MUSIC
-                        </Typography>
+                        <Input startDecorator={<SearchIcon />} onChange={searchBarTyped}/>
+                        <Box sx={{ flexGrow: 1 }} />
+                        <Box sx={{ display: 'flex', flexDirection: 'row-reverse', }}>
+                            <LoginButton navigate={navigate} />
+                        </Box>
                     </Toolbar>
-                    <Divider />
-                    <List>
-                        <ListItem key="home" disablePadding>
-                            <ListItemButton onClick={goToHome}>
-                                <ListItemIcon>
-                                    <HomeIcon />
-                                </ListItemIcon>
-                            <ListItemText primary="Home" />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem key="search" disablePadding>
-                            <ListItemButton onClick={goToSearch}>
-                                <ListItemIcon>
-                                    <SearchIcon />
-                                </ListItemIcon>
-                            <ListItemText primary="Search" />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem key="profile" disablePadding>
-                            <ListItemButton onClick={goToProfile}>
-                                <ListItemIcon>
-                                    <AccountCircleIcon />
-                                </ListItemIcon>
-                            <ListItemText primary="Profile" />
-                            </ListItemButton>
-                        </ListItem>
-                    </List>
-                    <Divider />
-                    <List>
-                        <ListItem key="create-playlist" disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <AddIcon />
-                                </ListItemIcon>
-                            <ListItemText primary="Create Playlist" />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem key="liked-songs" disablePadding>
-                            <ListItemButton onClick={goToLikedSongs}>
-                                <ListItemIcon>
-                                    <FavoriteIcon />
-                                </ListItemIcon>
-                            <ListItemText primary="Liked Songs" />
-                            </ListItemButton>
-                        </ListItem>
-                    </List>
-                    <AccountPlaylists navigate={navigate}/>
-                </Drawer>
+                </AppBar>
+                <Box
+                    component="nav"
+                    sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+                >
+                    <Drawer
+                        sx={{
+                            width: drawerWidth,
+                            flexShrink: 0,
+                            '& .MuiDrawer-paper': {
+                                width: drawerWidth,
+                                boxSizing: 'border-box',
+                            },
+                        }}
+                        variant="permanent"
+                        anchor="left"
+                    >
+                        <Toolbar>
+                            <Typography variant="h5" noWrap component="div">
+                                MUSIC
+                            </Typography>
+                        </Toolbar>
+                        <Divider />
+                        <List>
+                            <ListItem key="home" disablePadding>
+                                <ListItemButton onClick={goToHome}>
+                                    <ListItemIcon>
+                                        <HomeIcon />
+                                    </ListItemIcon>
+                                <ListItemText primary="Home" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem key="search" disablePadding>
+                                <ListItemButton onClick={goToSearch}>
+                                    <ListItemIcon>
+                                        <SearchIcon />
+                                    </ListItemIcon>
+                                <ListItemText primary="Search" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem key="profile" disablePadding>
+                                <ListItemButton onClick={goToProfile}>
+                                    <ListItemIcon>
+                                        <AccountCircleIcon />
+                                    </ListItemIcon>
+                                <ListItemText primary="Profile" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                        <Divider />
+                        <List>
+                            <ListItem key="create-playlist" disablePadding>
+                                <ListItemButton onClick={() => setPlaylistDialogOpen(true)}>
+                                    <ListItemIcon>
+                                        <AddIcon />
+                                    </ListItemIcon>
+                                <ListItemText primary="Create Playlist" />
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem key="liked-songs" disablePadding>
+                                <ListItemButton onClick={goToLikedSongs}>
+                                    <ListItemIcon>
+                                        <FavoriteIcon />
+                                    </ListItemIcon>
+                                <ListItemText primary="Liked Songs" />
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                        <AccountPlaylists navigate={navigate}/>
+                    </Drawer>
+                </Box>
             </Box>
-        </Box>
+            <CreatePlaylistDialog open={playlistDialogOpen} close={() => setPlaylistDialogOpen(false)}/>
+        </div>
     );
 }

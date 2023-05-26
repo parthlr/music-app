@@ -98,6 +98,7 @@ app.post('/create_playlist', (req, res) => {
                 console.log("CREATED PLAYLIST " + name);
             } else {
                 console.log("FAILED TO CREATE PLAYLIST " + name);
+                console.log(err);
             }
         }
     );

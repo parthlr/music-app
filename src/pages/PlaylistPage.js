@@ -177,7 +177,7 @@ export default function PlaylistPage() {
                     <ListItemDecorator sx={{ color: 'inherit' }}>
                         <DeleteForever />
                     </ListItemDecorator>
-                    Remove
+                    Delete
                 </MenuItem>
             </Menu>
         </div>
