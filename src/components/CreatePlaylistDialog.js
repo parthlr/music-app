@@ -34,17 +34,17 @@ export default function CreatePlaylistDialog(props) {
                 aria-describedby="basic-modal-dialog-description"
                 sx={{ maxWidth: 500 }}
             >
-            <Typography id="basic-modal-dialog-title" component="h2">
-                Create new playlist
-            </Typography>
-            <Stack spacing={2}>
-                <Input autoFocus required placeholder="Name"
-                    onChange={(e) => {
-                        setPlaylistName(e.target.value);
-                    }}
-                />
-                <Button onClick={createPlaylist}>Create</Button>
-            </Stack>
+                <Typography id="basic-modal-dialog-title" component="h2">
+                    Create new playlist
+                </Typography>
+                <Stack spacing={2}>
+                    <Input autoFocus required placeholder="Name"
+                        onChange={(e) => {
+                            setPlaylistName(e.target.value);
+                        }}
+                    />
+                    <Button onClick={createPlaylist}>Create</Button>
+                </Stack>
             </ModalDialog>
         </Modal>
     );

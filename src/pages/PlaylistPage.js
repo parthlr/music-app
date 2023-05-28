@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import Axios from "axios";
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -27,6 +27,7 @@ import DeleteForever from '@mui/icons-material/DeleteForever';
 import LikeButton from '../components/LikeButton';
 import SongCard from '../components/SongCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
+import ShareDialog from '../components/ShareDialog';
 
 export default function PlaylistPage() {
 
@@ -42,8 +43,10 @@ export default function PlaylistPage() {
     const [playlist, setPlaylist] = useState([]);
     const [songs, setSongs] = useState([]);
 
-    const [openDialog, setOpenDialog] = useState(false);
+    const [openPlaylistsDialog, setOpenPlaylistsDialog] = useState(false);
     const [clickedSong, setClickedSong] = useState(null);
+
+    const [openShareDialog, setOpenShareDialog] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -51,6 +54,8 @@ export default function PlaylistPage() {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const optionsOpen = Boolean(anchorEl);
+
+    const navigate = useNavigate();
 
     const getPlaylist = async() => {
         Axios.post('http://localhost:5000/playlist', {
@@ -87,6 +92,20 @@ export default function PlaylistPage() {
         } else {
             setLiked(false);
         }
+    }
+
+    const deletePlaylist = () => {
+        Axios.post('http://localhost:5000/delete_playlist', {
+            playlistID: id,
+        }).then((response) => {
+            if (response.data.message) {
+                console.log(response);
+                navigate('/profile');
+            } else if (response.data.error){
+                console.log(response);
+                console.log(response.data.error);
+            }
+        });
     }
 
     const handleOptionsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -154,11 +173,11 @@ export default function PlaylistPage() {
                 <Divider sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }} />
                 {
                 songs.map((song) => (
-                    <SongCard song={song} inPlaylist={true} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
+                    <SongCard song={song} inPlaylist={true} playlistID={id} openList={() => setOpenPlaylistsDialog(true)} clickSong={() => setClickedSong(song)} />
                 ))
                 }
             </List>
-            <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
+            <PlaylistsDialog open={openPlaylistsDialog} close={() => setOpenPlaylistsDialog(false)} song={clickedSong} />
             <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -167,19 +186,20 @@ export default function PlaylistPage() {
                 aria-labelledby="basic-demo-button"
                 placement="bottom-start"
             >
-                <MenuItem>
+                <MenuItem onClick={() => setOpenShareDialog(true)}>
                     <ListItemDecorator sx={{ color: 'inherit' }}>
                         <ShareIcon />
                     </ListItemDecorator>{" "}
                     Share
                 </MenuItem>
-                <MenuItem variant="soft" color="danger">
+                <MenuItem variant="soft" color="danger" onClick={deletePlaylist}>
                     <ListItemDecorator sx={{ color: 'inherit' }}>
                         <DeleteForever />
                     </ListItemDecorator>
                     Delete
                 </MenuItem>
             </Menu>
+            <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={"http://localhost:3000/playlist/" + id} />
         </div>
     );
 }

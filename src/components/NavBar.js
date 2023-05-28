@@ -52,11 +52,11 @@ function LoginButton(props) {
 }
 
 function AccountPlaylists(props) {
+    const [playlists, setPlaylists] = useState([]);
+
     useEffect(() => {
         getPlaylists();
-    },[]);
-
-    const [playlists, setPlaylists] = useState([]);
+    },[playlists]);
 
     const getPlaylists = async() => {
         Axios.post('http://localhost:5000/get_user_playlists', {

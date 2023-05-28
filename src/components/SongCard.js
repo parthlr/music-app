@@ -103,7 +103,7 @@ export default function SongCard(props) {
             songID: props.song.songID,
             playlistID: props.playlistID,
         }).then((response) => {
-            if (!response.data.err) {
+            if (!response.data.error) {
                 console.log("DELETED SONG FROM PLAYLIST");
             } else {
                 console.log(response.data.err);
@@ -114,7 +114,7 @@ export default function SongCard(props) {
     }
 
     const isSongLiked = async() => {
-        Axios.post('http://localhost:5000/is_liked', {
+        Axios.post('http://localhost:5000/is_song_liked', {
             userID: localStorage.getItem("user"),
             songID: props.song.songID,
         }).then((response) => {
@@ -130,7 +130,7 @@ export default function SongCard(props) {
 
     const toggleLike = () => {
         if (!liked) {
-            Axios.post('http://localhost:5000/add_like', {
+            Axios.post('http://localhost:5000/add_song_like', {
                 userID: localStorage.getItem("user"),
                 songID: props.song.songID,
             }).then((response) => {
@@ -143,7 +143,7 @@ export default function SongCard(props) {
                 }
             });
         } else {
-            Axios.post('http://localhost:5000/delete_like', {
+            Axios.post('http://localhost:5000/delete_song_like', {
                 userID: localStorage.getItem("user"),
                 songID: props.song.songID,
             }).then((response) => {

@@ -104,6 +104,23 @@ app.post('/create_playlist', (req, res) => {
     );
 });
 
+app.post('/delete_playlist', (req, res) => {
+    const {playlistID} = req.body;
+    connection.query(
+        'CALL delete_playlist(?)',
+        playlistID,
+        (err, row) => {
+            if (!err) {
+                console.log("SUCCESSFULLY DELETED PLAYLIST " + playlistID);
+                res.send({ message: "Successfully deleted playlist"});
+            } else {
+                console.log("FAILED TO DELETE PLAYLIST " + playlistID);
+                res.send({ error: "Failed to deleted playlist" });
+            }
+        }
+    );
+});
+
 app.post('/edit_profile', (req, res) => {
     const {name, email, userID} = req.body;
 
@@ -243,10 +260,10 @@ app.post('/get_songs_in_playlist', (req, res) => {
     );
 });
 
-app.post('/is_liked', (req, res) => {
+app.post('/is_song_liked', (req, res) => {
     const {userID, songID} = req.body;
     connection.query(
-        'SELECT * FROM user_likes WHERE userID = ? AND songID = ?',
+        'SELECT * FROM song_likes WHERE userID = ? AND songID = ?',
         [userID, songID],
         (err, rows) => {
             if (!err) {
@@ -265,10 +282,10 @@ app.post('/is_liked', (req, res) => {
     );
 });
 
-app.post('/add_like', (req, res) => {
+app.post('/add_song_like', (req, res) => {
     const {userID, songID} = req.body;
     connection.query(
-        'INSERT INTO user_likes (userID, songID) VALUES (?,?)',
+        'INSERT INTO song_likes (userID, songID) VALUES (?,?)',
         [userID, songID],
         (err, result) => {
             if (!err) {
@@ -282,10 +299,10 @@ app.post('/add_like', (req, res) => {
     );
 });
 
-app.post('/delete_like', (req, res) => {
+app.post('/delete_song_like', (req, res) => {
     const {userID, songID} = req.body;
     connection.query(
-        'DELETE FROM user_likes WHERE userID = ? AND songID = ?',
+        'DELETE FROM song_likes WHERE userID = ? AND songID = ?',
         [userID, songID],
         (err, result) => {
             if (!err) {
@@ -302,7 +319,7 @@ app.post('/delete_like', (req, res) => {
 app.post('/get_liked_songs', (req, res) => {
     const {userID} = req.body;
     connection.query(
-        'SELECT * FROM Songs WHERE songID IN (SELECT songID FROM user_likes WHERE userID = ?)',
+        'SELECT * FROM Songs WHERE songID IN (SELECT songID FROM song_likes WHERE userID = ?)',
         userID,
         (err, rows) => {
             if (!err) {
