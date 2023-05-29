@@ -28,6 +28,7 @@ import LikeButton from '../components/LikeButton';
 import SongCard from '../components/SongCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 import ShareDialog from '../components/ShareDialog';
+import ConfirmationDialog from '../components/ConfirmationDialog';
 
 export default function PlaylistPage() {
 
@@ -47,6 +48,8 @@ export default function PlaylistPage() {
     const [clickedSong, setClickedSong] = useState(null);
 
     const [openShareDialog, setOpenShareDialog] = useState(false);
+
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -192,7 +195,7 @@ export default function PlaylistPage() {
                     </ListItemDecorator>{" "}
                     Share
                 </MenuItem>
-                <MenuItem variant="soft" color="danger" onClick={deletePlaylist}>
+                <MenuItem variant="soft" color="danger" onClick={() => setOpenConfirmationDialog(true)}>
                     <ListItemDecorator sx={{ color: 'inherit' }}>
                         <DeleteForever />
                     </ListItemDecorator>
@@ -200,6 +203,7 @@ export default function PlaylistPage() {
                 </MenuItem>
             </Menu>
             <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={"http://localhost:3000/playlist/" + id} />
+            <ConfirmationDialog open={openConfirmationDialog} close={() => setOpenConfirmationDialog(false)} description="Are you sure you want to delete this playlist?" confirm={deletePlaylist} />
         </div>
     );
 }
