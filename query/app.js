@@ -47,14 +47,17 @@ app.post('/create_account', (req, res) => {
         }
 
         connection.query(
-            "INSERT INTO Users (email, name, hashed_password) VALUES (?,?,?)",
+            "CALL create_account(?,?,?)",
             [email, name, hash],
             (err, result) => {
                 console.log(err);
                 //res.send({return_message: "Email and password combination not found"});
                 if(!err) {
-                    console.log("CREATED USER");
-                    res.send({message: "Successfully created user"});
+                    console.log("CREATED USER " + result[0][0].userID);
+                    res.send({ user: result[0][0].userID, message: "Successfully created user"});
+                } else {
+                    console.log("UNABLE TO CREATE USER");
+                    res.send({ error: "Error: Unable to create account" });
                 }
             }
         )
@@ -209,6 +212,24 @@ app.post('/get_user_playlists', (req, res) => {
     );
 });
 
+app.post('/get_user_liked_playlists', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT * FROM Playlists WHERE playlistID IN (SELECT playlistID FROM creates WHERE userID != ? AND playlistID IN (SELECT playlistID FROM playlist_likes WHERE userID = ?))',
+        [userID, userID],
+        (err, rows) => {
+            if (!err) {
+                console.log("FOUND ALL USER PLAYLISTS (INCLUDING LIKED)");
+                res.send(rows);
+            } else {
+                console.log("COULD NOT FIND ALL USER PLAYLISTS");
+                console.log(err);
+                res.send({ error: "Failed to get liked and user playlists"});
+            }
+        }
+    );
+})
+
 app.post('/add_to_playlist', (req, res) => {
     const {songID, playlistID} = req.body;
     connection.query(
@@ -255,6 +276,62 @@ app.post('/get_songs_in_playlist', (req, res) => {
             } else {
                 console.log("COULD NOT GET SONGS IN PLAYLIST");
                 res.send({error: "Error getting songs in playlist"});
+            }
+        }
+    );
+});
+
+app.post('/is_playlist_liked', (req, res) => {
+    const {userID, playlistID} = req.body;
+    connection.query(
+        'SELECT * FROM playlist_likes WHERE userID = ? AND playlistID = ?',
+        [userID, playlistID],
+        (err, rows) => {
+            if (!err) {
+                if (rows.length >= 1) {
+                    console.log("FOUND LIKES FOR PLAYLIST");
+                    res.send({message: "Playlist is liked"});
+                } else {
+                    console.log("COULD NOT FIND LIKE FOR PLAYLIST");
+                    res.send({error: "Playlist is not liked"});
+                }
+            } else {
+                console.log("ERROR FINDING IF PLAYLIST IS LIKED");
+                res.send({error: "Could not find if playlist is liked"});
+            }
+        }
+    );
+});
+
+app.post('/add_playlist_like', (req, res) => {
+    const {userID, playlistID} = req.body;
+    connection.query(
+        'INSERT INTO playlist_likes (userID, playlistID) VALUES (?,?)',
+        [userID, playlistID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY LIKED PLAYLIST");
+                res.send({message: "Added playlist to likes"});
+            } else {
+                console.log("COULD NOT LIKE PLAYLIST");
+                res.send({error: "Error liking playlist"});
+            }
+        }
+    );
+});
+
+app.post('/delete_playlist_like', (req, res) => {
+    const {userID, playlistID} = req.body;
+    connection.query(
+        'DELETE FROM playlist_likes WHERE userID = ? AND playlistID = ?',
+        [userID, playlistID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY REMOVED LIKE FROM PLAYLIST");
+                res.send({message: "Removed playlist from likes"});
+            } else {
+                console.log("COULD NOT REMOVE LIKE FROM PLAYLIST");
+                res.send({error: "Error removing like from playlist"});
             }
         }
     );
@@ -345,7 +422,7 @@ app.get('/get_songs', (req, res) => {
             }
         }
     );
-})
+});
 
 module.exports = connection;
 

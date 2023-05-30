@@ -52,11 +52,12 @@ function LoginButton(props) {
 }
 
 function AccountPlaylists(props) {
-    const [playlists, setPlaylists] = useState([]);
 
     useEffect(() => {
         getPlaylists();
-    },[playlists]);
+    },[]);
+
+    const [playlists, setPlaylists] = useState([]);
 
     const getPlaylists = async() => {
         Axios.post('http://localhost:5000/get_user_playlists', {
@@ -83,7 +84,56 @@ function AccountPlaylists(props) {
             <Divider />
             <List>
                 <ListItem>
-                    <ListItemText primary="Playlists" />
+                    <ListItemText primary="My Playlists" />
+                </ListItem>
+                {
+                    playlists.map((playlist) => (
+                        <ListItem disablePadding key={"id_" + playlist.playlistID + "_name_" + playlist.name}>
+                            <ListItemButton onClick={() => viewPlaylist(playlist.playlistID)}>
+                                <Avatar variant="rounded" sx={{ width: 50, height: 50, borderRadius: 2 }}src="https://img.freepik.com/free-photo/wide-angle-shot-single-tree-growing-clouded-sky-during-sunset-surrounded-by-grass_181624-22807.jpg?w=1380&t=st=1684630316~exp=1684630916~hmac=0e441d6880fb900e383a404ce82e110ebef60888b70c8b12c55a46c2e47dd274" />
+                                <ListItemText sx={{ pl: "8px" }} primary={playlist.name}/>
+                            </ListItemButton>
+                        </ListItem>
+                    ))
+                }
+            </List>
+        </div>
+    );
+}
+
+function LikedPlaylists(props) {
+
+    useEffect(() => {
+        getPlaylists();
+    },[]);
+
+    const [playlists, setPlaylists] = useState([]);
+
+    const getPlaylists = async() => {
+        Axios.post('http://localhost:5000/get_user_liked_playlists', {
+            userID: localStorage.getItem("user")
+        }).then((response) => {
+            if (!response.data.error) {
+                setPlaylists(response.data);
+                console.log("GOT PROFILE PLAYLIST DATA");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const viewPlaylist = (id) => {
+        props.navigate('/playlist/' + id);
+    }
+
+    if (!Auth.isLoggedIn()) {
+        return null;
+    }
+    return (
+        <div>
+            <List>
+                <ListItem>
+                    <ListItemText primary="Liked Playlists" />
                 </ListItem>
                 {
                     playlists.map((playlist) => (
@@ -208,6 +258,7 @@ export default function NavBar() {
                             </ListItem>
                         </List>
                         <AccountPlaylists navigate={navigate}/>
+                        <LikedPlaylists navigate={navigate}/>
                     </Drawer>
                 </Box>
             </Box>

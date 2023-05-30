@@ -38,6 +38,7 @@ export default function PlaylistPage() {
         setPlaylistID(id);
         getPlaylist();
         getSongsInPlaylist();
+        isPlaylistLiked();
     },[id]);
 
     const [pID, setPlaylistID] = useState("");
@@ -89,11 +90,48 @@ export default function PlaylistPage() {
         });
     }
 
+    const isPlaylistLiked = async() => {
+        Axios.post('http://localhost:5000/is_playlist_liked', {
+            userID: localStorage.getItem("user"),
+            playlistID: id,
+        }).then((response) => {
+            if (response.data.message) {
+                setLiked(true);
+                console.log(response);
+            } else {
+                setLiked(false);
+                console.log(response);
+            }
+        });
+    }
+
     const toggleLike = () => {
         if (!liked) {
-            setLiked(true);
+            Axios.post('http://localhost:5000/add_playlist_like', {
+                userID: localStorage.getItem("user"),
+                playlistID: id,
+            }).then((response) => {
+                if (!response.data.error) {
+                    setLiked(true);
+                    console.log(response);
+                } else {
+                    setLiked(false);
+                    console.log(response);
+                }
+            });
         } else {
-            setLiked(false);
+            Axios.post('http://localhost:5000/delete_playlist_like', {
+                userID: localStorage.getItem("user"),
+                playlistID: id,
+            }).then((response) => {
+                if (!response.data.error) {
+                    setLiked(false);
+                    console.log(response);
+                } else {
+                    setLiked(true);
+                    console.log(response);
+                }
+            });
         }
     }
 
@@ -104,6 +142,7 @@ export default function PlaylistPage() {
             if (response.data.message) {
                 console.log(response);
                 navigate('/profile');
+                window.location.reload(false);
             } else if (response.data.error){
                 console.log(response);
                 console.log(response.data.error);

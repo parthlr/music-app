@@ -94,13 +94,15 @@ function Base() {
                         <Routes>
                             <Route exact path='/' element={<HomePage />} />
                             <Route exact path='/search' element={<SearchPage />} />
-                            <Route exact path='/login' element={<LoginPage />} />
+                            <Route exact path='/login' element={
+                                <AuthRoute redirectTo="/profile" auth={false}><LoginPage /></AuthRoute>
+                            } />
                             <Route exact path='/register' element={<CreateAccountPage />} />
                             <Route exact path='/profile' element={
-                                <AuthRoute redirectTo="/login"><ProfilePage /></AuthRoute>
+                                <AuthRoute redirectTo="/login" auth={true}><ProfilePage /></AuthRoute>
                             } />
                             <Route exact path='/liked-songs' element={
-                                <AuthRoute redirectTo="/login"><LikedSongsPage /></AuthRoute>
+                                <AuthRoute redirectTo="/login" auth={true}><LikedSongsPage /></AuthRoute>
                             } />
                             <Route exact path='/playlist/:id' element={<PlaylistPage />} />
                         </Routes>
