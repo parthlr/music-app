@@ -30,6 +30,52 @@ import PlaylistsDialog from '../components/PlaylistsDialog';
 import ShareDialog from '../components/ShareDialog';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 
+function PlaylistMenu(props) {
+    console.log(props.userID);
+    if (props.userID == parseInt(localStorage.getItem("user"))) {
+        return (
+            <Menu
+                id="basic-menu"
+                anchorEl={props.anchorEl}
+                open={props.open}
+                onClose={props.close}
+                aria-labelledby="basic-demo-button"
+                placement="bottom-start"
+            >
+                <MenuItem onClick={props.share}>
+                    <ListItemDecorator sx={{ color: 'inherit' }}>
+                        <ShareIcon />
+                    </ListItemDecorator>{" "}
+                    Share
+                </MenuItem>
+                <MenuItem variant="soft" color="danger" onClick={props.confirm}>
+                    <ListItemDecorator sx={{ color: 'inherit' }}>
+                        <DeleteForever />
+                    </ListItemDecorator>
+                    Delete
+                </MenuItem>
+            </Menu>
+        );
+    }
+    return (
+        <Menu
+            id="basic-menu"
+            anchorEl={props.anchorEl}
+            open={props.open}
+            onClose={props.close}
+            aria-labelledby="basic-demo-button"
+            placement="bottom-start"
+        >
+            <MenuItem onClick={props.share}>
+                <ListItemDecorator sx={{ color: 'inherit' }}>
+                    <ShareIcon />
+                </ListItemDecorator>{" "}
+                Share
+            </MenuItem>
+        </Menu>
+    );
+}
+
 export default function PlaylistPage() {
 
     const {id} = useParams();
@@ -38,6 +84,7 @@ export default function PlaylistPage() {
         setPlaylistID(id);
         getPlaylist();
         getSongsInPlaylist();
+        getPlaylistCreator();
         isPlaylistLiked();
     },[id]);
 
@@ -53,6 +100,8 @@ export default function PlaylistPage() {
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [playlistCreator, setPlaylistCreator] = useState([]);
 
     const [liked, setLiked] = useState(false);
 
@@ -82,6 +131,20 @@ export default function PlaylistPage() {
         }).then((response) => {
             if (!response.data.error) {
                 setSongs(response.data);
+                console.log(response);
+            } else {
+                console.log(response);
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const getPlaylistCreator = async() => {
+        Axios.post('http://localhost:5000/get_playlist_creator', {
+            playlistID: id,
+        }).then((response) => {
+            if (!response.data.error) {
+                setPlaylistCreator(response.data[0]);
                 console.log(response);
             } else {
                 console.log(response);
@@ -177,6 +240,7 @@ export default function PlaylistPage() {
                 />
                 <CardContent sx={{ justifyContent: 'flex-end' }}>
                     <Typography sx={{ fontSize: 80 }}level="h1">{playlist.name}</Typography>
+                    <Typography sx={{ fontSize: 20 }}level="h1">{playlistCreator.name}</Typography>
                 </CardContent>
             </Card>
             <br />
@@ -220,27 +284,7 @@ export default function PlaylistPage() {
                 }
             </List>
             <PlaylistsDialog open={openPlaylistsDialog} close={() => setOpenPlaylistsDialog(false)} song={clickedSong} />
-            <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={optionsOpen}
-                onClose={handleOptionsClose}
-                aria-labelledby="basic-demo-button"
-                placement="bottom-start"
-            >
-                <MenuItem onClick={() => setOpenShareDialog(true)}>
-                    <ListItemDecorator sx={{ color: 'inherit' }}>
-                        <ShareIcon />
-                    </ListItemDecorator>{" "}
-                    Share
-                </MenuItem>
-                <MenuItem variant="soft" color="danger" onClick={() => setOpenConfirmationDialog(true)}>
-                    <ListItemDecorator sx={{ color: 'inherit' }}>
-                        <DeleteForever />
-                    </ListItemDecorator>
-                    Delete
-                </MenuItem>
-            </Menu>
+            <PlaylistMenu userID={playlistCreator.userID} open={optionsOpen} anchorEl={anchorEl} close={handleOptionsClose} share={() => setOpenShareDialog(true)} confirm={() => setOpenConfirmationDialog(true)} />
             <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={"http://localhost:3000/playlist/" + id} />
             <ConfirmationDialog open={openConfirmationDialog} close={() => setOpenConfirmationDialog(false)} description="Are you sure you want to delete this playlist?" confirm={deletePlaylist} />
         </div>

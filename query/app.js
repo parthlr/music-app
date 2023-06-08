@@ -281,6 +281,23 @@ app.post('/get_songs_in_playlist', (req, res) => {
     );
 });
 
+app.post('/get_playlist_creator', (req, res) => {
+    const {playlistID} = req.body;
+    connection.query(
+        'SELECT * FROM Users WHERE userID IN (SELECT userID FROM creates WHERE playlistID = ?)',
+        playlistID,
+        (err, rows) => {
+            if (!err) {
+                console.log("FOUND USER CREATOR OF PLAYLIST");
+                res.send(rows);
+            } else {
+                console.log("COULD NOT GET PLAYLIST CREATOR");
+                res.send({ error: "Error getting playlist creator"});
+            }
+        }
+    );
+});
+
 app.post('/is_playlist_liked', (req, res) => {
     const {userID, playlistID} = req.body;
     connection.query(
