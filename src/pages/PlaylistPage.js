@@ -28,10 +28,10 @@ import LikeButton from '../components/LikeButton';
 import SongCard from '../components/SongCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 import ShareDialog from '../components/ShareDialog';
+import PlaylistSettingsDialog from '../components/PlaylistSettingsDialog';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 
 function PlaylistMenu(props) {
-    console.log(props.userID);
     if (props.userID == parseInt(localStorage.getItem("user"))) {
         return (
             <Menu
@@ -76,6 +76,17 @@ function PlaylistMenu(props) {
     );
 }
 
+function SettingsButton(props) {
+    if (props.userID == parseInt(localStorage.getItem("user"))) {
+        return (
+            <IconButton variant="plain" color="neutral" onClick={props.settings}>
+                <SettingsIcon fontSize="large"/>
+            </IconButton>
+        );
+    }
+    return null;
+}
+
 export default function PlaylistPage() {
 
     const {id} = useParams();
@@ -98,6 +109,8 @@ export default function PlaylistPage() {
     const [openShareDialog, setOpenShareDialog] = useState(false);
 
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
+    const [openSettingsDialog, setOpenSettingsDialog] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -253,9 +266,7 @@ export default function PlaylistPage() {
                         <MoreHoriz fontSize="large"/>
                     </IconButton>
                 </div>
-                <IconButton variant="plain" color="neutral">
-                    <SettingsIcon fontSize="large"/>
-                </IconButton>
+                <SettingsButton userID={playlistCreator.userID} settings={() => setOpenSettingsDialog(true)}/>
             </Box>
             <br /><br />
             <List sx={{ pl: "50px", pr: "50px" }}>
@@ -286,6 +297,7 @@ export default function PlaylistPage() {
             <PlaylistsDialog open={openPlaylistsDialog} close={() => setOpenPlaylistsDialog(false)} song={clickedSong} />
             <PlaylistMenu userID={playlistCreator.userID} open={optionsOpen} anchorEl={anchorEl} close={handleOptionsClose} share={() => setOpenShareDialog(true)} confirm={() => setOpenConfirmationDialog(true)} />
             <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={"http://localhost:3000/playlist/" + id} />
+            <PlaylistSettingsDialog open={openSettingsDialog} close={() => setOpenSettingsDialog(false)} />
             <ConfirmationDialog open={openConfirmationDialog} close={() => setOpenConfirmationDialog(false)} description="Are you sure you want to delete this playlist?" confirm={deletePlaylist} />
         </div>
     );
