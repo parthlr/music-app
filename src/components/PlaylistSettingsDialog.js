@@ -16,6 +16,7 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
+import Grid from '@mui/joy/Grid';
 
 export default function PlaylistSettingsDialog(props) {
 
@@ -52,9 +53,37 @@ export default function PlaylistSettingsDialog(props) {
                             }}
                         />
                     </div>
-                    <Button color="primary" variant="plain"
-                        startDecorator={<Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />}
-                    />
+                    <div>
+                        <FormLabel>Decoration</FormLabel>
+                        <Box sx={{ display: 'flex', justifyContent: 'center'}}>
+                            <Grid
+                              container
+                              spacing={0}
+                              sx={{ width: '100%' }}
+                            >
+                                <Grid item xs={4}>
+                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
+                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
+                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
+                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
+                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </div>
                     <Button>Save</Button>
                 </Stack>
             </ModalDialog>
