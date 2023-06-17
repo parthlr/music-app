@@ -21,13 +21,14 @@ import Grid from '@mui/joy/Grid';
 
 export default function PlaylistSettingsDialog(props) {
 
-    useEffect(() => {
-        getBackgroundImages();
-    },[]);
-
+    const [p_private, setPrivate] = useState(false);
     const [name, setName] = useState("");
 
-    const [p_private, setPrivate] = useState(false);
+    useEffect(() => {
+        getBackgroundImages();
+        setPrivate(props.playlist.private);
+        setName(props.playlist.name);
+    },[props.imageID, props.playlist.private]);
 
     const [images, setImages] = useState([]);
 
@@ -35,8 +36,8 @@ export default function PlaylistSettingsDialog(props) {
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const getBackgroundImages = async() => {
-        Axios.get('http://localhost:5000/get_background_images')
-        .then((response) => {
+        Axios.get('http://localhost:5000/get_background_images'
+        ).then((response) => {
             if (!response.data.error) {
                 setImages(response.data);
                 let initialSelectedList = [];
@@ -49,6 +50,7 @@ export default function PlaylistSettingsDialog(props) {
                     }
                 }
                 setSelectedList(initialSelectedList);
+                setSelectedIndex(props.imageID - 1);
                 console.log("GOT BACKGROUND IMAGES");
                 console.log(initialSelectedList);
             } else {
@@ -57,10 +59,12 @@ export default function PlaylistSettingsDialog(props) {
         });
     }
 
-    const updatePlaylistBackgroundImage = () => {
-        Axios.post('http://localhost:5000/update_playlist_image', {
-            playlistID: props.id,
+    const updatePlaylist = () => {
+        Axios.post('http://localhost:5000/update_playlist', {
+            playlistID: props.playlist.playlistID,
+            name: name,
             imageID: selectedIndex + 1,
+            isPrivate: p_private,
         }).then((response) => {
             if (response.data.message) {
                 console.log(response.data.message);
@@ -84,7 +88,7 @@ export default function PlaylistSettingsDialog(props) {
     }
 
     const updateSettings = () => {
-        updatePlaylistBackgroundImage();
+        updatePlaylist();
         props.close();
         window.location.reload(false);
     }
@@ -96,45 +100,48 @@ export default function PlaylistSettingsDialog(props) {
                 aria-describedby="basic-modal-dialog-description"
                 size="lg"
             >
-                <Typography id="basic-modal-dialog-title" component="h2">
-                    Playlist Settings
-                </Typography>
-                <Stack spacing={3}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
-                        <FormLabel>Private</FormLabel>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography id="basic-modal-dialog-title" component="h2">
+                        Playlist Settings
+                    </Typography>
+                    <Box sx={{ display: 'flex', mt: "0px", pt: "0px" }}>
+                        <FormLabel sx={{ mr: "10px" }}>Private</FormLabel>
                         <Switch checked={p_private}
                             onChange={(e) => setPrivate(e.target.checked)}
                         />
                     </Box>
+                </Box>
+                <Stack spacing={3}>
                     <div>
                         <FormLabel>Name</FormLabel>
-                        <Input autoFocus required placeholder="Playlist Name"
+                        <Input autoFocus required placeholder="Playlist Name" defaultValue={props.playlist.name}
                             onChange={(e) => {
                                 setName(e.target.value);
                             }}
                         />
                     </div>
-
-                        <FormLabel>Decoration</FormLabel>
-                        <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-                            <Grid
-                              container
-                              spacing={0}
-                              sx={{ width: '100%' }}
-                            >
-                                {
-                                    images.map((image, index) => (
-                                        <Grid item xs={4} align="center">
-                                            <Button color="primary" variant={selectedList[index]} sx={{ p: 0.5}} onClick={() => selectBackground(index)}>
-                                                <Avatar color="primary" sx={{ width: 100, height: 100, borderRadius: 2 }} src={image.link} />
-                                            </Button>
-                                        </Grid>
-                                    ))
-                                }
-                            </Grid>
-                        </Box>
-
-                    <Button onClick={updateSettings}>Save</Button>
+                    <FormLabel>Decoration</FormLabel>
+                    <Box sx={{ display: 'flex', justifyContent: 'center'}}>
+                        <Grid
+                          container
+                          spacing={0}
+                          sx={{ width: '100%' }}
+                        >
+                            {
+                                images.map((image, index) => (
+                                    <Grid item xs={4} align="center">
+                                        <Button color="primary" variant={selectedList[index]} sx={{ p: 0.5}} onClick={() => selectBackground(index)}>
+                                            <Avatar color="primary" sx={{ width: 100, height: 100, borderRadius: 2 }} src={image.link} />
+                                        </Button>
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, pt: 2 }}>
+                        <Button color="danger" onClick={props.close}>Cancel</Button>
+                        <Button onClick={updateSettings}>Save</Button>
+                    </Box>
                 </Stack>
             </ModalDialog>
         </Modal>

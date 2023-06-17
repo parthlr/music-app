@@ -319,7 +319,7 @@ export default function PlaylistPage() {
             <PlaylistsDialog open={openPlaylistsDialog} close={() => setOpenPlaylistsDialog(false)} song={clickedSong} />
             <PlaylistMenu userID={playlistCreator.userID} open={optionsOpen} anchorEl={anchorEl} close={handleOptionsClose} share={() => setOpenShareDialog(true)} confirm={() => setOpenConfirmationDialog(true)} />
             <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={"http://localhost:3000/playlist/" + id} />
-            <PlaylistSettingsDialog id={id} open={openSettingsDialog} close={() => setOpenSettingsDialog(false)} imageID={playlistImageID} updateImage={setPlaylistImageID} />
+            <PlaylistSettingsDialog playlist={playlist} open={openSettingsDialog} close={() => setOpenSettingsDialog(false)} imageID={playlistImageID} updateImage={setPlaylistImageID} />
             <ConfirmationDialog open={openConfirmationDialog} close={() => setOpenConfirmationDialog(false)} description="Are you sure you want to delete this playlist?" confirm={deletePlaylist} />
         </div>
     );

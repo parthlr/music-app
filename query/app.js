@@ -315,18 +315,18 @@ app.post('/get_playlist_image', (req, res) => {
     );
 });
 
-app.post('/update_playlist_image', (req, res) => {
-    const {playlistID, imageID} = req.body;
+app.post('/update_playlist', (req, res) => {
+    const {playlistID, name, imageID, isPrivate} = req.body;
     connection.query(
-        'UPDATE Playlists SET backgroundImageID = ? WHERE playlistID = ?',
-        [imageID, playlistID],
+        'UPDATE Playlists SET name = ?, backgroundImageID = ?, private = ? WHERE playlistID = ?',
+        [name, imageID, isPrivate, playlistID],
         (err, rows) => {
             if (!err) {
-                console.log("SUCCESSFULLY UPDATED PLAYLIST IMAGE");
-                res.send({ message: "Successfully updated playlist background iamge" })
+                console.log("SUCCESSFULLY UPDATED PLAYLIST");
+                res.send({ message: "Successfully updated playlist" })
             } else {
-                console.log("ERROR UPDATING PLAYLIST IMAGE");
-                res.send({ error: "Error updating playlist background image" });
+                console.log("ERROR UPDATING PLAYLIST");
+                res.send({ error: "Error updating playlist" });
             }
         }
     );
