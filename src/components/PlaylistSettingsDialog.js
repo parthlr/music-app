@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import Axios from "axios";
+import axios from "axios";
 import Avatar from '@mui/joy/Avatar';
 import Button from '@mui/joy/Button';
 import Input from '@mui/joy/Input';
@@ -21,12 +22,72 @@ import Grid from '@mui/joy/Grid';
 export default function PlaylistSettingsDialog(props) {
 
     useEffect(() => {
-
+        getBackgroundImages();
     },[]);
 
     const [name, setName] = useState("");
 
     const [p_private, setPrivate] = useState(false);
+
+    const [images, setImages] = useState([]);
+
+    const [selectedList, setSelectedList] = useState([]);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+
+    const getBackgroundImages = async() => {
+        Axios.get('http://localhost:5000/get_background_images')
+        .then((response) => {
+            if (!response.data.error) {
+                setImages(response.data);
+                let initialSelectedList = [];
+                console.log("Image ID: ");
+                for (let i = 0; i < response.data.length; i++) {
+                    if (i == props.imageID - 1) {
+                        initialSelectedList.push("solid");
+                    } else {
+                        initialSelectedList.push("plain");
+                    }
+                }
+                setSelectedList(initialSelectedList);
+                console.log("GOT BACKGROUND IMAGES");
+                console.log(initialSelectedList);
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const updatePlaylistBackgroundImage = () => {
+        Axios.post('http://localhost:5000/update_playlist_image', {
+            playlistID: props.id,
+            imageID: selectedIndex + 1,
+        }).then((response) => {
+            if (response.data.message) {
+                console.log(response.data.message);
+                console.log(response);
+            } else {
+                console.log(response);
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const selectBackground = (index) => {
+        let updatedList = [...images];
+        for (let i = 0; i < images.length; i++) {
+            updatedList[i] = "plain";
+        }
+        updatedList[index] = "solid";
+
+        setSelectedList(updatedList);
+        setSelectedIndex(index);
+    }
+
+    const updateSettings = () => {
+        updatePlaylistBackgroundImage();
+        props.close();
+        window.location.reload(false);
+    }
 
     return (
         <Modal open={props.open} onClose={props.close}>
@@ -53,7 +114,7 @@ export default function PlaylistSettingsDialog(props) {
                             }}
                         />
                     </div>
-                    <div>
+
                         <FormLabel>Decoration</FormLabel>
                         <Box sx={{ display: 'flex', justifyContent: 'center'}}>
                             <Grid
@@ -61,30 +122,19 @@ export default function PlaylistSettingsDialog(props) {
                               spacing={0}
                               sx={{ width: '100%' }}
                             >
-                                <Grid item xs={4}>
-                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
-                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
-                                    </Button>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
-                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
-                                    </Button>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
-                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
-                                    </Button>
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <Button color="primary" variant="plain" sx={{ p: 0.5}}>
-                                        <Avatar color="primary" sx={{ width: 50, height: 50, borderRadius: 2 }} src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg" />
-                                    </Button>
-                                </Grid>
+                                {
+                                    images.map((image, index) => (
+                                        <Grid item xs={4} align="center">
+                                            <Button color="primary" variant={selectedList[index]} sx={{ p: 0.5}} onClick={() => selectBackground(index)}>
+                                                <Avatar color="primary" sx={{ width: 100, height: 100, borderRadius: 2 }} src={image.link} />
+                                            </Button>
+                                        </Grid>
+                                    ))
+                                }
                             </Grid>
                         </Box>
-                    </div>
-                    <Button>Save</Button>
+
+                    <Button onClick={updateSettings}>Save</Button>
                 </Stack>
             </ModalDialog>
         </Modal>

@@ -95,6 +95,7 @@ export default function PlaylistPage() {
         setPlaylistID(id);
         getPlaylist();
         getSongsInPlaylist();
+        getPlaylistBackgroundImage();
         getPlaylistCreator();
         isPlaylistLiked();
     },[id]);
@@ -115,6 +116,9 @@ export default function PlaylistPage() {
     const [errorMessage, setErrorMessage] = useState("");
 
     const [playlistCreator, setPlaylistCreator] = useState([]);
+
+    const [playlistImage, setPlaylistImage] = useState("");
+    const [playlistImageID, setPlaylistImageID] = useState(0);
 
     const [liked, setLiked] = useState(false);
 
@@ -144,6 +148,24 @@ export default function PlaylistPage() {
         }).then((response) => {
             if (!response.data.error) {
                 setSongs(response.data);
+                console.log(response);
+            } else {
+                console.log(response);
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const getPlaylistBackgroundImage = async() => {
+        Axios.post('http://localhost:5000/get_playlist_image', {
+            playlistID: id,
+        }).then((response) => {
+            if (!response.data.error) {
+                setPlaylistImage(response.data[0].link);
+                setPlaylistImageID(response.data[0].id);
+                console.log("--------------------------------------");
+                console.log(response.data[0].link);
+                console.log(response.data[0].id);
                 console.log(response);
             } else {
                 console.log(response);
@@ -239,8 +261,8 @@ export default function PlaylistPage() {
             <Card variant="plain" sx={{ minHeight: '400px', width: `calc(100% - 240px)`, ml: "240px" }}>
                 <CardCover>
                     <img
-                        src="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg"
-                        srcSet="https://wallpapercrafter.com/desktop1/524319-pink-purple-gradient-pink-color-backgrounds-abstract.jpg 2x"
+                        src={playlistImage}
+                        srcSet={playlistImage + " 2x"}
                         loading="lazy"
                         alt=""
                     />
@@ -297,7 +319,7 @@ export default function PlaylistPage() {
             <PlaylistsDialog open={openPlaylistsDialog} close={() => setOpenPlaylistsDialog(false)} song={clickedSong} />
             <PlaylistMenu userID={playlistCreator.userID} open={optionsOpen} anchorEl={anchorEl} close={handleOptionsClose} share={() => setOpenShareDialog(true)} confirm={() => setOpenConfirmationDialog(true)} />
             <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={"http://localhost:3000/playlist/" + id} />
-            <PlaylistSettingsDialog open={openSettingsDialog} close={() => setOpenSettingsDialog(false)} />
+            <PlaylistSettingsDialog id={id} open={openSettingsDialog} close={() => setOpenSettingsDialog(false)} imageID={playlistImageID} updateImage={setPlaylistImageID} />
             <ConfirmationDialog open={openConfirmationDialog} close={() => setOpenConfirmationDialog(false)} description="Are you sure you want to delete this playlist?" confirm={deletePlaylist} />
         </div>
     );

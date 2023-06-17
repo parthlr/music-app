@@ -298,6 +298,40 @@ app.post('/get_playlist_creator', (req, res) => {
     );
 });
 
+app.post('/get_playlist_image', (req, res) => {
+    const {playlistID} = req.body;
+    connection.query(
+        'SELECT * FROM background_images WHERE id IN (SELECT backgroundImageID FROM Playlists WHERE playlistID = ?)',
+        playlistID,
+        (err, rows) => {
+            if (!err) {
+                console.log("GOT PLAYLIST IMAGE");
+                res.send(rows);
+            } else {
+                console.log("COULD NOT GET PLAYLIST IMAGE");
+                res.send({ error: "Error getting playlist image" });
+            }
+        }
+    );
+});
+
+app.post('/update_playlist_image', (req, res) => {
+    const {playlistID, imageID} = req.body;
+    connection.query(
+        'UPDATE Playlists SET backgroundImageID = ? WHERE playlistID = ?',
+        [imageID, playlistID],
+        (err, rows) => {
+            if (!err) {
+                console.log("SUCCESSFULLY UPDATED PLAYLIST IMAGE");
+                res.send({ message: "Successfully updated playlist background iamge" })
+            } else {
+                console.log("ERROR UPDATING PLAYLIST IMAGE");
+                res.send({ error: "Error updating playlist background image" });
+            }
+        }
+    );
+})
+
 app.post('/is_playlist_liked', (req, res) => {
     const {userID, playlistID} = req.body;
     connection.query(
@@ -423,6 +457,21 @@ app.post('/get_liked_songs', (req, res) => {
                 console.log("FAILED TO GET LIKED SONGS");
                 console.log(err);
                 res.send({error: "Error getting liked songs"});
+            }
+        }
+    )
+});
+
+app.get('/get_background_images', (req, res) => {
+    connection.query(
+        'SELECT * FROM background_images',
+        (err, rows) => {
+            if (!err) {
+                console.log("GOT ALL BACKGROUND IMAGES");
+                res.send(rows);
+            } else {
+                console.log("FAILED TO GET BACKGROUND IMAGES");
+                res.send({ error: "Failed to fetch background images" });
             }
         }
     )
