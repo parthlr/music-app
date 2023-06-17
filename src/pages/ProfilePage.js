@@ -21,10 +21,13 @@ export default function ProfilePage() {
     useEffect(() => {
         getProfileData();
         getPlaylists();
+        getLikedPlaylists();
     },[]);
 
     const [profile, setProfile] = useState([]);
     const [playlists, setPlaylists] = useState([]);
+
+    const [likedPlaylists, setLikedPlaylists] = useState([]);
 
     const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
@@ -58,6 +61,19 @@ export default function ProfilePage() {
                 console.log("GOT PROFILE PLAYLIST DATA");
             } else {
                 console.log(response.data.err);
+            }
+        });
+    }
+
+    const getLikedPlaylists = async() => {
+        Axios.post('http://localhost:5000/get_user_liked_playlists', {
+            userID: localStorage.getItem("user")
+        }).then((response) => {
+            if (!response.data.error) {
+                setLikedPlaylists(response.data);
+                console.log("GOT PROFILE PLAYLIST DATA");
+            } else {
+                console.log(response.data.error);
             }
         });
     }
@@ -116,7 +132,14 @@ export default function ProfilePage() {
                 {
                     playlists.map((playlist) => (
                         <Box sx={{ pl: "10px", pr: "20px" }}>
-                            <PlaylistCard playlist={playlist} />
+                            <PlaylistCard playlist={playlist} liked={false}/>
+                        </Box>
+                    ))
+                }
+                {
+                    likedPlaylists.map((playlist) => (
+                        <Box sx={{ pl: "10px", pr: "20px" }}>
+                            <PlaylistCard playlist={playlist} liked={true}/>
                         </Box>
                     ))
                 }

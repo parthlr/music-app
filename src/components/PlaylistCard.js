@@ -12,6 +12,30 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { pink } from '@mui/material/colors';
 
+function LikedIcon(props) {
+    if (props.liked) {
+        return (
+            <IconButton disabled
+                aria-label="Like minimal photography"
+                size="lg"
+                variant="plain"
+                color="neutral"
+                sx={{
+                    position: 'absolute',
+                    zIndex: 2,
+                    borderRadius: '50%',
+                    right: '1rem',
+                    bottom: 0,
+                    transform: 'translateY(50%)',
+                }}
+            >
+                <FavoriteIcon fontSize="large" sx={{ color: pink[500] }} />
+            </IconButton>
+        );
+    }
+    return null;
+}
+
 export default function PlaylistCard(props) {
 
     useEffect((e) => {
@@ -49,22 +73,7 @@ export default function PlaylistCard(props) {
                             alt=""
                         />
                     </AspectRatio>
-                    <IconButton disabled
-                        aria-label="Like minimal photography"
-                        size="lg"
-                        variant="plain"
-                        color="neutral"
-                        sx={{
-                            position: 'absolute',
-                            zIndex: 2,
-                            borderRadius: '50%',
-                            right: '1rem',
-                            bottom: 0,
-                            transform: 'translateY(50%)',
-                        }}
-                    >
-                        <FavoriteIcon fontSize="large" sx={{ color: pink[500] }} />
-                    </IconButton>
+                    <LikedIcon liked={props.liked} />
                 </CardOverflow>
                 <Typography level="h2" fontSize="md" sx={{ mb: 0.5, mt: "10px" }}>
                     <Link
