@@ -179,7 +179,7 @@ function LikedPlaylists(props) {
     );
 }
 
-export default function NavBar() {
+export default function NavBar(props) {
 
     const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
 
@@ -201,7 +201,8 @@ export default function NavBar() {
         navigate('/liked-songs');
     }
 
-    const searchBarTyped = () => {
+    const searchBarTyped = (e) => {
+        props.setSearch(e.target.value);
         if (window.location.pathname != "/search") {
             navigate('/search');
         }
@@ -212,7 +213,7 @@ export default function NavBar() {
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="fixed" sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
                     <Toolbar>
-                        <Input startDecorator={<SearchIcon />} onChange={searchBarTyped}/>
+                        <Input startDecorator={<SearchIcon />} onChange={(e) => searchBarTyped(e)}/>
                         <Box sx={{ flexGrow: 1 }} />
                         <Box sx={{ display: 'flex', flexDirection: 'row-reverse', }}>
                             <LoginButton navigate={navigate} />

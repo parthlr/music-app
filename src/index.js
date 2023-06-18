@@ -83,6 +83,8 @@ const DarkMode = () => {
 };
 
 function Base() {
+    const [searchQuery, setSearchQuery] = useState("");
+
     return (
         <BrowserRouter>
             <div>
@@ -90,10 +92,10 @@ function Base() {
                     <JoyCssVarsProvider defaultMode="dark">
                         <CssBaseline enableColorScheme />
                         <DarkMode />
-                        <NavBar />
+                        <NavBar setSearch={setSearchQuery}/>
                         <Routes>
                             <Route exact path='/' element={<HomePage />} />
-                            <Route exact path='/search' element={<SearchPage />} />
+                            <Route exact path='/search' element={<SearchPage query={searchQuery}/>} />
                             <Route exact path='/login' element={
                                 <AuthRoute redirectTo="/profile" auth={false}><LoginPage /></AuthRoute>
                             } />
