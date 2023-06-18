@@ -17,6 +17,7 @@ import IconButton from '@mui/joy/IconButton';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVert from '@mui/icons-material/MoreVert';
+
 import SongCard from '../components/SongCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 
@@ -89,7 +90,7 @@ export default function LikedSongsPage() {
                 <Divider sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }} />
                 {
                 likedSongs.map((song) => (
-                    <SongCard song={song} inPlaylist={false} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
+                    <SongCard song={song} inPlaylist={false} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}/>
                 ))
                 }
             </List>

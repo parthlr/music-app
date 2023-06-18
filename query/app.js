@@ -228,7 +228,7 @@ app.post('/get_user_liked_playlists', (req, res) => {
             }
         }
     );
-})
+});
 
 app.post('/add_to_playlist', (req, res) => {
     const {songID, playlistID} = req.body;
@@ -477,14 +477,67 @@ app.get('/get_background_images', (req, res) => {
     )
 });
 
+app.post('/get_home_page_playlists', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT * FROM Playlists WHERE playlistID IN (SELECT playlistID FROM creates WHERE userID = ?) ORDER BY RAND() LIMIT 4',
+        (err, rows) => {
+            if (!err) {
+                console.log("GOT HOME PAGE PLAYLISTS");
+                res.send(rows);
+            } else {
+                console.log("FAILED TO GET HOME PAGE PLAYLISTS");
+                res.send({ error: "Failed to get home page playlists" });
+            }
+        }
+    );
+});
+
+app.post('/get_recommended_playlists', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT * FROM Playlists WHERE playlistID NOT IN (SELECT playlistID FROM creates WHERE userID = ?) AND playlistID NOT IN (SELECT playlistID FROM playlist_likes WHERE userID = ?) ORDER BY RAND() LIMIT 2',
+        [userID, userID],
+        (err, rows) => {
+            if (!err) {
+                console.log("FOUND HOME PAGE RECOMMENDED PLAYLISTS");
+                res.send(rows);
+            } else {
+                console.log("COULD NOT FIND HOME PAGE RECOMMENDED PLAYLISTS");
+                console.log(err);
+                res.send({ error: "Failed to get home page recommended playlists"});
+            }
+        }
+    );
+});
+
+app.post('/get_home_page_liked_playlists', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT * FROM Playlists WHERE playlistID IN (SELECT playlistID FROM creates WHERE userID != ? AND playlistID IN (SELECT playlistID FROM playlist_likes WHERE userID = ?)) ORDER BY RAND() LIMIT 4',
+        [userID, userID],
+        (err, rows) => {
+            if (!err) {
+                console.log("FOUND HOME PAGE LIKED PLAYLISTS");
+                res.send(rows);
+            } else {
+                console.log("COULD NOT FIND HOME PAGE PLAYLISTS");
+                console.log(err);
+                res.send({ error: "Failed to get liked home page playlists"});
+            }
+        }
+    );
+});
+
 app.get('/get_songs', (req, res) => {
-    connection.query('SELECT * FROM Songs ORDER BY RAND() LIMIT 10',
+    connection.query('SELECT * FROM Songs ORDER BY RAND() LIMIT 5',
         (err, rows) => {
             if (!err) {
                 console.log("GOT RANDOM SONGS");
                 res.send(rows);
             } else {
-                console.log(err);
+                console.log("FAILED TO GET RANDOM SONGS");
+                res.send({ error: "Failed to get random songs" });
             }
         }
     );

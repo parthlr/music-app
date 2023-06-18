@@ -312,7 +312,7 @@ export default function PlaylistPage() {
                 <Divider sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }} />
                 {
                 songs.map((song) => (
-                    <SongCard song={song} inPlaylist={true} playlistID={id} openList={() => setOpenPlaylistsDialog(true)} clickSong={() => setClickedSong(song)} />
+                    <SongCard song={song} inPlaylist={true} playlistID={id} openList={() => setOpenPlaylistsDialog(true)} clickSong={() => setClickedSong(song)} sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}/>
                 ))
                 }
             </List>

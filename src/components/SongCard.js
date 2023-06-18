@@ -168,7 +168,7 @@ export default function SongCard(props) {
                 <Grid
                     container
                     spacing={0}
-                    sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}
+                    sx={props.sx}
                 >
                     <ListItemButton>
                             <Grid item xs={3}>
