@@ -568,7 +568,7 @@ app.post('/search_playlists', (req, res) => {
 app.post('/search_songs', (req, res) => {
     const {search} = req.body;
     connection.query(
-        "SELECT * FROM Songs WHERE INSTR(title, ?) > 0 OR INSTR(artist, ?) > 0 LIMIT 100",
+        "SELECT * FROM Songs WHERE INSTR(title, ?) > 0 OR INSTR(artist, ?) > 0 LIMIT 30",
         [search, search],
         (err, rows) => {
             if (!err) {

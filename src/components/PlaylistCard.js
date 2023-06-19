@@ -40,9 +40,12 @@ export default function PlaylistCard(props) {
 
     useEffect((e) => {
         getPlaylistBackgroundImage();
+        isPlaylistLiked();
     },[props.playlist.playlistID]);
 
     const [playlistImage, setPlaylistImage] = useState("");
+
+    const [liked, setLiked] = useState(false);
 
     const getPlaylistBackgroundImage = async() => {
         Axios.post('http://localhost:5000/get_playlist_image', {
@@ -61,6 +64,21 @@ export default function PlaylistCard(props) {
         });
     }
 
+    const isPlaylistLiked = async() => {
+        Axios.post('http://localhost:5000/is_playlist_liked', {
+            userID: localStorage.getItem("user"),
+            playlistID: props.playlist.playlistID,
+        }).then((response) => {
+            if (response.data.message) {
+                setLiked(true);
+                console.log(response);
+            } else {
+                setLiked(false);
+                console.log(response);
+            }
+        });
+    }
+
     return (
         <div className="playlist-card">
             <Card variant="outlined" sx={{ width: 250 }}>
@@ -73,7 +91,7 @@ export default function PlaylistCard(props) {
                             alt=""
                         />
                     </AspectRatio>
-                    <LikedIcon liked={props.liked} />
+                    <LikedIcon liked={liked} />
                 </CardOverflow>
                 <Typography level="h2" fontSize="md" sx={{ mb: 0.5, mt: "10px" }}>
                     <Link

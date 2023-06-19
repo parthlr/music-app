@@ -98,7 +98,7 @@ export default function HomePage() {
                     {
                         recommendedPlaylists.map((playlist) => (
                             <Grid item xs={6}>
-                                <PlaylistCard playlist={playlist} liked={false}/>
+                                <PlaylistCard playlist={playlist}/>
                             </Grid>
                         ))
                     }
@@ -141,7 +141,7 @@ export default function HomePage() {
                     {
                         playlists.map((playlist) => (
                             <Grid item xs={6}>
-                                <PlaylistCard playlist={playlist} liked={false}/>
+                                <PlaylistCard playlist={playlist}/>
                             </Grid>
                         ))
                     }

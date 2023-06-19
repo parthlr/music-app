@@ -132,14 +132,14 @@ export default function ProfilePage() {
                 {
                     playlists.map((playlist) => (
                         <Box sx={{ pl: "10px", pr: "20px" }}>
-                            <PlaylistCard playlist={playlist} liked={false}/>
+                            <PlaylistCard playlist={playlist}/>
                         </Box>
                     ))
                 }
                 {
                     likedPlaylists.map((playlist) => (
                         <Box sx={{ pl: "10px", pr: "20px" }}>
-                            <PlaylistCard playlist={playlist} liked={true}/>
+                            <PlaylistCard playlist={playlist}/>
                         </Box>
                     ))
                 }

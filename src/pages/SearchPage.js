@@ -10,7 +10,77 @@ import ListItemContent from '@mui/joy/ListItemContent';
 import Divider from '@mui/material/Divider';
 
 import SongCard from '../components/SongCard';
+import PlaylistCard from '../components/PlaylistCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
+
+function PlaylistResults(props) {
+    if (props.playlists.length > 0) {
+        return (
+            <div>
+                <br />
+                <Typography sx={{ fontSize: 30, ml: "240px", pl: "50px" }}level="h1">Playlists</Typography>
+                <br />
+                <Grid
+                    container
+                    spacing={0}
+                    sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }}
+                >
+                    {
+                        props.playlists.map((playlist) => (
+                            <Grid item xs={3}>
+                                <PlaylistCard playlist={playlist}/>
+                            </Grid>
+                        ))
+                    }
+                </Grid>
+                <br />
+            </div>
+        );
+    }
+    return (
+        <div />
+    );
+}
+
+function SongResults(props) {
+    if (props.songs.length > 0) {
+        return (
+            <div>
+                <Typography sx={{ fontSize: 30, ml: "240px", pl: "50px" }}level="h1">Songs</Typography>
+                <br />
+                <List sx={{ pl: "50px", pr: "50px" }}>
+                    <ListItem>
+                        <Grid
+                            container
+                            spacing={0}
+                            sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}
+                        >
+                            <Grid item xs={3}>
+                                <ListItemContent>Title</ListItemContent>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <ListItemContent>Artist</ListItemContent>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <ListItemContent>Released</ListItemContent>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                    <Divider sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }} />
+                    {
+                        props.songs.map((song) => (
+                            <SongCard song={song} inPlaylist={false} openList={() => props.setOpenDialog(true)} clickSong={() => props.setClickedSong(song)} sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}/>
+                        ))
+                    }
+                </List>
+                <br />
+            </div>
+        );
+    }
+    return(
+        <div />
+    );
+}
 
 export default function SearchPage(props) {
 
@@ -20,7 +90,7 @@ export default function SearchPage(props) {
 
             getPlaylistResults();
             getSongResults();
-        }, 3000);
+        }, 1500);
 
         return () => clearTimeout(delayDebounceFn);
     }, [props.query]);
@@ -70,31 +140,8 @@ export default function SearchPage(props) {
     return (
         <div className="search-page">
             <br /><br /><br /><br />
-            <List sx={{ pl: "50px", pr: "50px" }}>
-                <ListItem>
-                    <Grid
-                        container
-                        spacing={0}
-                        sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}
-                    >
-                        <Grid item xs={3}>
-                            <ListItemContent>Title</ListItemContent>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <ListItemContent>Artist</ListItemContent>
-                        </Grid>
-                        <Grid item xs={3}>
-                            <ListItemContent>Released</ListItemContent>
-                        </Grid>
-                    </Grid>
-                </ListItem>
-                <Divider sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "50px", pr: "50px" }} />
-                {
-                    songs.map((song) => (
-                        <SongCard song={song} inPlaylist={false} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} sx={{ width: `calc(100% - 240px)`, ml: "240px", pl: "10px" }}/>
-                    ))
-                }
-            </List>
+            <PlaylistResults playlists={playlists} />
+            <SongResults songs={songs} setOpenDialog={setOpenDialog} setClickedSong={setClickedSong} />
             <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
         </div>
     );
