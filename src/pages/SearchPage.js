@@ -12,6 +12,7 @@ import Divider from '@mui/material/Divider';
 import SongCard from '../components/SongCard';
 import PlaylistCard from '../components/PlaylistCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 function PlaylistResults(props) {
     if (props.playlists.length > 0) {
@@ -80,12 +81,18 @@ function SongResults(props) {
 
 export default function SearchPage(props) {
 
+    const [openLoading, setOpenLoading] = useState(false);
+
     useEffect(() => {
+        setOpenLoading(true);
+
         const delayDebounceFn = setTimeout(() => {
             console.log(props.query);
 
             getPlaylistResults();
             getSongResults();
+
+            setOpenLoading(false);
         }, 1500);
 
         return () => clearTimeout(delayDebounceFn);
@@ -141,6 +148,7 @@ export default function SearchPage(props) {
             <PlaylistResults playlists={playlists} />
             <SongResults songs={songs} setOpenDialog={setOpenDialog} setClickedSong={setClickedSong} />
             <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
+            <LoadingOverlay open={openLoading} close={() => setOpenLoading(false)} />
         </div>
     );
 }
