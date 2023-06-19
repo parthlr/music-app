@@ -37,9 +37,7 @@ function PlaylistResults(props) {
             </div>
         );
     }
-    return (
-        <div />
-    );
+    return null;
 }
 
 function SongResults(props) {
@@ -77,9 +75,7 @@ function SongResults(props) {
             </div>
         );
     }
-    return(
-        <div />
-    );
+    return null;
 }
 
 export default function SearchPage(props) {
@@ -111,6 +107,7 @@ export default function SearchPage(props) {
             if (response.data.error) {
                 console.log(response.data.error);
             } else if (response.data.message) {
+                setPlaylists([]);
                 console.log(response.data.message);
             } else {
                 setPlaylists(response.data);
@@ -129,6 +126,7 @@ export default function SearchPage(props) {
             if (response.data.error) {
                 console.log(response.data.error);
             } else if (response.data.message) {
+                setSongs([]);
                 console.log(response.data.message);
             } else {
                 setSongs(response.data);
