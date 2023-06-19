@@ -543,6 +543,50 @@ app.get('/get_songs', (req, res) => {
     );
 });
 
+app.post('/search_playlists', (req, res) => {
+    const {search} = req.body;
+    connection.query(
+        "SELECT * FROM Playlists WHERE INSTR(name, ?) > 0 LIMIT 20",
+        search,
+        (err, rows) => {
+            if (!err) {
+                if (rows.length > 0) {
+                    console.log("FOUND PLAYLISTS WITH SIMILAR NAME TO SEARCH");
+                    res.send(rows);
+                } else {
+                    console.log("NO PLAYLISTS FOUND WITH SIMILAR NAME TO SEARCH");
+                    res.send({ message: "No playlists found with search term" });
+                }
+            } else {
+                console.log("FAILED TO SEARCH FOR PLAYLISTS");
+                res.send({ error: "Error while searching for playlists" });
+            }
+        }
+    );
+});
+
+app.post('/search_songs', (req, res) => {
+    const {search} = req.body;
+    connection.query(
+        "SELECT * FROM Songs WHERE INSTR(title, ?) > 0 OR INSTR(artist, ?) > 0 LIMIT 100",
+        [search, search],
+        (err, rows) => {
+            if (!err) {
+                if (rows.length > 0) {
+                    console.log("FOUND SONGS WITH SIMILAR NAME TO SEARCH");
+                    res.send(rows);
+                } else {
+                    console.log("NO SONGS FOUND WITH SIMILAR NAME TO SEARCH");
+                    res.send({ message: "No songs found with search term" });
+                }
+            } else {
+                console.log("FAILED TO SEARCH FOR SONGS");
+                res.send({ error: "Error while searching for songs" });
+            }
+        }
+    );
+});
+
 module.exports = connection;
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
