@@ -13,6 +13,7 @@ import Link from '@mui/joy/Link';
 
 export default function CreateAccountPage() {
 
+    const [username_r, setUsername] = useState("");
     const [email_r, setEmail] = useState("");
     const [name_r, setName] = useState("");
     const [password_r, setPassword] = useState("");
@@ -30,6 +31,31 @@ export default function CreateAccountPage() {
 
         if (password_r != confirmPassword) {
             setErrorMessage("Passwords do not match");
+            return;
+        }
+
+        let accountExists = false;
+
+        Axios.post("http://localhost:5000/check_account_exists", {
+            username: username_r,
+            email: email_r,
+        }).then((response) => {
+            console.log(response);
+            if(response.data.exists) {
+                if (response.data.exists == 1) {
+                    setErrorMessage("Account already exists");
+                    accountExists = true;
+                    console.log("EXISTS: " + accountExists);
+                }
+            }
+            if (response.data.error) {
+                setErrorMessage(response.data.error);
+                localStorage.setItem("isLoggedIn", false);
+            }
+        });
+
+        console.log("EXISTS: " + accountExists);
+        if (accountExists) {
             return;
         }
 
@@ -70,6 +96,11 @@ export default function CreateAccountPage() {
                         <Input autoFocus required placeholder="Name" sx={{ width: "100%" }}
                             onChange={(e) => {
                                 setName(e.target.value);
+                            }}
+                        />
+                        <Input autoFocus required placeholder="Username" sx={{ width: "100%" }}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
                             }}
                         />
                         <Input autoFocus required type="email" placeholder="Email" sx={{ width: "100%" }}

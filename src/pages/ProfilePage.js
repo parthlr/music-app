@@ -124,7 +124,7 @@ export default function ProfilePage() {
     return (
         <div className="profile-page">
             <br /><br /><br /><br /><br /><br />
-            <Box sx={{ display: 'flex', justifyContent: 'center', width: `calc(100% - 150px)`, ml: "150px", pl: "50px", pr: "50px" }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: `calc(100% - 50px)`, ml: "50px", pl: "50px", pr: "50px" }}>
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
                     <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
                     <div>

@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import Axios from "axios";
 import Button from '@mui/joy/Button';
+import Box from '@mui/joy/Box';
 import Input from '@mui/joy/Input';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import Link from '@mui/joy/Link';
 
 export default function LoginPage() {
 
@@ -24,7 +26,7 @@ export default function LoginPage() {
         //event.preventDefault();
         //alert("Email: " + email + " Password: " + password);
         Axios.post("http://localhost:5000/login", {
-            email: username_r,
+            username: username_r,
             password: password_r,
         }).then((response) => {
             if (response.data.message) {
@@ -66,6 +68,11 @@ export default function LoginPage() {
                     />
                     <Button onClick={login}>Login</Button>
                 </Stack>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', pt: "10px" }}>
+                    <Link href="/login" underline="none">
+                        Register
+                    </Link>
+                </Box>
             </ModalDialog>
         </Modal>
     );

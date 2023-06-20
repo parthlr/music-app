@@ -64,26 +64,52 @@ app.post('/create_account', (req, res) => {
     });
 });
 
+app.post('/check_account_exists', (req, res) => {
+    const {username, email} = req.body;
+    connection.query(
+        'SELECT userID FROM Users WHERE username = ? OR email = ?',
+        [username, email],
+        (err, rows) => {
+            if (!err) {
+                if (rows.length > 0) {
+                    console.log("ACCOUNT ALREADY EXISTS");
+                    res.send({ exists: 1 });
+                } else {
+                    console.log("ACCOUNT DOES NOT EXIST");
+                    res.send({ exists: 0 });
+                }
+            } else {
+                console.log("ERROR CHECKING IF ACCOUNT EXISTS");
+                res.send({ error: "Error creating account" });
+            }
+        }
+    );
+});
+
 app.post('/login', (req, res) => {
-    const {email, password} = req.body;
+    const {username, password} = req.body;
 
     connection.query(
-        "SELECT userID, hashed_password FROM Users WHERE email = ?",
-        email,
+        "SELECT userID, hashed_password FROM Users WHERE username = ?",
+        username,
         (err, pass_rows) => {
             if (err) {
+                console.log("-----------ERROR LOGGING IN-----------");
                 res.send({error: err});
             }
             if (pass_rows.length > 0) {
                 bcrypt.compare(password, pass_rows[0].hashed_password, (error, response) => {
                     if (response) {
+                        console.log("-----------LOGIN SUCCESS-----------");
                         res.send({message: "Login successful!", user: pass_rows[0].userID});
                     } else {
                         console.log(error);
+                        console.log("-----------LOGIN FAILED-----------");
                         res.send({message: "Login failed"});
                     }
                 });
             } else {
+                console.log("-----------USER DOESN'T EXIST-----------");
                 res.send({message: "User not found"});
             }
         }
