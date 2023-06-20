@@ -106,6 +106,7 @@ export default function SearchPage(props) {
 
     const getPlaylistResults = async() => {
         if (props.query.length == 0) {
+            setPlaylists([]);
             return;
         }
         Axios.post('http://localhost:5000/search_playlists', {
@@ -125,6 +126,7 @@ export default function SearchPage(props) {
 
     const getSongResults = async() => {
         if (props.query.length == 0) {
+            setSongs([]);
             return;
         }
         Axios.post('http://localhost:5000/search_songs', {

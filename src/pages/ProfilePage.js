@@ -8,13 +8,21 @@ import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import FormLabel from '@mui/joy/FormLabel';
 import Stack from '@mui/joy/Stack';
-import AddIcon from '@mui/icons-material/Add';
-import SettingsIcon from '@mui/icons-material/Settings';
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/joy/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import Avatar from '@mui/joy/Avatar';
+import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 import PlaylistCard from '../components/PlaylistCard';
+import SongCard from '../components/SongCard';
 import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
 
 export default function ProfilePage() {
@@ -22,12 +30,18 @@ export default function ProfilePage() {
         getProfileData();
         getPlaylists();
         getLikedPlaylists();
+        getLikedSongs();
     },[]);
 
     const [profile, setProfile] = useState([]);
     const [playlists, setPlaylists] = useState([]);
 
     const [likedPlaylists, setLikedPlaylists] = useState([]);
+
+    const [likedSongs, setLikedSongs] = useState([]);
+
+    const [openDialog, setOpenDialog] = useState(false);
+    const [clickedSong, setClickedSong] = useState(null);
 
     const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
@@ -78,6 +92,19 @@ export default function ProfilePage() {
         });
     }
 
+    const getLikedSongs = async() => {
+        Axios.post('http://localhost:5000/get_liked_songs', {
+            userID: localStorage.getItem("user")
+        }).then((response) => {
+            if (!response.data.error) {
+                setLikedSongs(response.data);
+                console.log("GOT LIKED SONGS");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
     const editProfile = () => {
         //var current_user = parseInt(localStorage.getItem("user"));
         //console.log(current_user);
@@ -91,59 +118,94 @@ export default function ProfilePage() {
         });
 
         setProfileOpen(false);
-        //window.location.reload(false);
+        window.location.reload(false);
     }
 
     return (
         <div className="profile-page">
-            <br /><br /><br /><br />
-            <Grid container direction="column" sx={{ width: `calc(100% - 240px)`, ml: "240px" }}>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        p: 1,
-                        m: 1,
-                    }}
-                >
-                    <Typography level="h2" sx={{ pr: "20px" }}>{profileName}</Typography>
-                    <IconButton variant="plain" color="neutral" size="lg" onClick={() => setProfileOpen(true)}>
-                        <SettingsIcon fontSize="large"/>
-                    </IconButton>
-                </Box>
-            </Grid>
-            <br /><br /><br /><br />
-            <Grid container direction="column" sx={{ width: `calc(100% - 240px)`, ml: "240px" }}>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        p: 1,
-                        m: 1,
-                    }}
-                >
-                    <Typography level="h4" sx={{ pr: "20px" }}>Playlists</Typography>
-                    <IconButton variant="outlined" color="neutral" onClick={() => setPlaylistDialogOpen(true)}>
-                        <AddIcon />
-                    </IconButton>
-                </Box>
-                <br />
-            </Grid>
-            <br /><br />
-            <Box sx={{ display: 'flex', ml: "240px", width: `calc(100% - 240px)`}}>
-                {
-                    playlists.map((playlist) => (
-                        <Box sx={{ pl: "10px", pr: "20px" }}>
-                            <PlaylistCard playlist={playlist}/>
+            <br /><br /><br /><br /><br /><br />
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: `calc(100% - 150px)`, ml: "150px", pl: "50px", pr: "50px" }}>
+                <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
+                    <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
+                    <div>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
+                            <IconButton variant="soft" color="neutral">
+                                <PersonAddIcon />
+                            </IconButton>
                         </Box>
-                    ))
-                }
-                {
-                    likedPlaylists.map((playlist) => (
-                        <Box sx={{ pl: "10px", pr: "20px" }}>
-                            <PlaylistCard playlist={playlist}/>
-                        </Box>
-                    ))
-                }
+                        <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
+                    </div>
+                    <br />
+                    <Button variant="soft" color="neutral" onClick={() => setProfileOpen(true)}>Edit Profile</Button>
+                </Stack>
+                <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <Typography sx={{ fontSize: 20 }}level="h1">Playlists</Typography>
+                        <IconButton variant="soft" color="neutral" onClick={() => setPlaylistDialogOpen(true)}>
+                            <AddIcon />
+                        </IconButton>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 3,
+                            py: 3,
+                            overflow: 'auto',
+                            width: 800,
+                            scrollSnapType: 'x mandatory',
+                            '& > *': {
+                              scrollSnapAlign: 'center',
+                            },
+                            '::-webkit-scrollbar': { display: 'none' },
+                        }}
+                    >
+                        {
+                            playlists.map((playlist) => (
+                                <Box>
+                                    <PlaylistCard playlist={playlist}/>
+                                </Box>
+                            ))
+                        }
+                        {
+                            likedPlaylists.map((playlist) => (
+                                <Box>
+                                    <PlaylistCard playlist={playlist}/>
+                                </Box>
+                            ))
+                        }
+                    </Box>
+                    <br /><br />
+                    <Typography sx={{ fontSize: 20 }}level="h1">Liked Songs</Typography>
+                    <br />
+                    <List>
+                        <ListItem>
+                            <Grid
+                                container
+                                spacing={0}
+
+                            >
+                                <Grid item xs={3}>
+                                    <ListItemContent>Title</ListItemContent>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <ListItemContent>Artist</ListItemContent>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <ListItemContent>Released</ListItemContent>
+                                </Grid>
+                            </Grid>
+                        </ListItem>
+                        <Divider  />
+                        {
+                        likedSongs.map((song) => (
+                            <SongCard song={song} inPlaylist={false} openList={() => setOpenDialog(true)} clickSong={() => setClickedSong(song)} />
+                        ))
+                        }
+                    </List>
+                </Stack>
             </Box>
+            <br /><br />
             <CreatePlaylistDialog open={playlistDialogOpen} close={() => setPlaylistDialogOpen(false)}/>
             <Modal open={profileOpen} onClose={() => setProfileOpen(false)}>
                 <ModalDialog
