@@ -41,12 +41,29 @@ export default function CreateAccountPage() {
             email: email_r,
         }).then((response) => {
             console.log(response);
-            if(response.data.exists) {
-                if (response.data.exists == 1) {
-                    setErrorMessage("Account already exists");
-                    accountExists = true;
-                    console.log("EXISTS: " + accountExists);
-                }
+            if (response.data.exists == 1) {
+                setErrorMessage("Account already exists");
+                accountExists = true;
+                console.log("EXISTS: " + accountExists);
+            } else if (response.data.exists == 0){
+                return Axios.post("http://localhost:5000/create_account", {
+                    username: username_r,
+                    email: email_r,
+                    name: name_r,
+                    password: password_r,
+                }).then((res) => {
+                    console.log(res);
+                    if(res.data.message) {
+                        localStorage.setItem("user", res.data.user);
+                        localStorage.setItem("isLoggedIn", true);
+                        navigate('/profile');
+                        window.location.reload(false);
+                    }
+                    if (res.data.error) {
+                        setErrorMessage(res.data.error);
+                        localStorage.setItem("isLoggedIn", false);
+                    }
+                });
             }
             if (response.data.error) {
                 setErrorMessage(response.data.error);
@@ -54,28 +71,6 @@ export default function CreateAccountPage() {
             }
         });
 
-        console.log("EXISTS: " + accountExists);
-        if (accountExists) {
-            return;
-        }
-
-        Axios.post("http://localhost:5000/create_account", {
-            email: email_r,
-            name: name_r,
-            password: password_r,
-        }).then((response) => {
-            console.log(response);
-            if(response.data.message) {
-                localStorage.setItem("user", response.data.user);
-                localStorage.setItem("isLoggedIn", true);
-                navigate('/profile');
-                window.location.reload(false);
-            }
-            if (response.data.error) {
-                setErrorMessage(response.data.error);
-                localStorage.setItem("isLoggedIn", false);
-            }
-        });
     };
 
     return (

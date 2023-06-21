@@ -4,11 +4,13 @@ import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-do
 import AuthRoute from './components/AuthRoute';
 import axios from "axios";
 import NavBar from "./components/NavBar";
+
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import LoginPage from "./pages/LoginPage";
 import CreateAccountPage from "./pages/CreateAccountPage";
 import ProfilePage from "./pages/ProfilePage";
+import UserProfilePage from "./pages/UserProfilePage";
 import PlaylistPage from "./pages/PlaylistPage";
 import LikedSongsPage from "./pages/LikedSongsPage";
 
@@ -107,6 +109,7 @@ function Base() {
                                 <AuthRoute redirectTo="/login" auth={true}><LikedSongsPage /></AuthRoute>
                             } />
                             <Route exact path='/playlist/:id' element={<PlaylistPage />} />
+                            <Route exact path='/user/:username' element={<UserProfilePage />} />
                         </Routes>
                     </JoyCssVarsProvider>
                 </MaterialCssVarsProvider>

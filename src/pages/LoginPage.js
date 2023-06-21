@@ -22,8 +22,8 @@ export default function LoginPage() {
 
     const navigate = useNavigate();
 
-    const login = () => {
-        //event.preventDefault();
+    const login = (event) => {
+        event.preventDefault();
         //alert("Email: " + email + " Password: " + password);
         Axios.post("http://localhost:5000/login", {
             username: username_r,
@@ -55,20 +55,22 @@ export default function LoginPage() {
                 <Typography color="danger" >
                     {error_message}
                 </Typography>
-                <Stack spacing={2}>
-                    <Input autoFocus required placeholder="Username"
-                        onChange={(e) => {
-                            setUsername(e.target.value);
-                        }}
-                    />
-                    <Input autoFocus required placeholder="Password" type="password" autoComplete="current-password"
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                        }}
-                    />
-                    <Button onClick={login}>Login</Button>
-                </Stack>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', pt: "10px" }}>
+                <form onSubmit={login}>
+                    <Box sx={{ py: 2, display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', flexWrap: 'wrap', }}>
+                        <Input autoFocus required placeholder="Username"
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                            }}
+                        />
+                        <Input autoFocus required placeholder="Password" type="password" autoComplete="current-password"
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                            }}
+                        />
+                        <Button type="submit" sx={{ width: "100%" }}>Login</Button>
+                    </Box>
+                </form>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Link href="/login" underline="none">
                         Register
                     </Link>

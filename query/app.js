@@ -39,7 +39,7 @@ connection.connect(function (err) {
 app.get('/', (req, res) => res.send('Hello World!'));
 
 app.post('/create_account', (req, res) => {
-    const {email, name, password} = req.body;
+    const {username, email, name, password} = req.body;
 
     bcrypt.hash(password, salt, (err, hash) => {
         if (err) {
@@ -47,8 +47,8 @@ app.post('/create_account', (req, res) => {
         }
 
         connection.query(
-            "CALL create_account(?,?,?)",
-            [email, name, hash],
+            "CALL create_account(?,?,?,?)",
+            [username, email, name, hash],
             (err, result) => {
                 console.log(err);
                 //res.send({return_message: "Email and password combination not found"});
@@ -203,18 +203,23 @@ app.post('/playlist', (req, res) => {
 })
 
 app.post('/get_profile_data', (req, res) => {
-    const {userID} = req.body;
+    const {userID, username} = req.body;
     connection.query(
-        'SELECT name, email FROM Users WHERE userID = ?',
-        userID,
+        'SELECT userID, username, name, email FROM Users WHERE userID = ? OR username = ?',
+        [userID, username],
         (err, row) => {
             if (!err) {
-                console.log("FOUND PROFILE DATA");
-                res.send(row);
+                if (row.length > 0) {
+                    console.log("FOUND PROFILE DATA");
+                    res.send(row);
+                } else {
+                    console.log("NO ACCOUNTS FOUND WITH THAT USERNAME");
+                    res.send({error: "Failed to find account with username"});
+                }
             } else {
                 console.log("COULD NOT FIND PROFILE DATA");
                 console.log(err);
-                res.send({err: "PROFILE ERROR"});
+                res.send({error: "PROFILE ERROR"});
             }
         }
     );

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import Axios from "axios";
 import Button from '@mui/joy/Button';
 import IconButton from '@mui/joy/IconButton';
@@ -30,14 +30,22 @@ export default function ProfilePage() {
 
     const {username} = useParams();
 
+    const [profile, setProfile] = useState([]);
+
+    const navigate = useNavigate();
+
     useEffect(() => {
         getProfileData();
+
+        if (profile.userID == parseInt(localStorage.getItem("user"))) {
+            navigate('/profile');
+        }
+
         getPlaylists();
         getLikedPlaylists();
         getLikedSongs();
-    },[]);
+    },[username, profile.userID]);
 
-    const [profile, setProfile] = useState([]);
     const [playlists, setPlaylists] = useState([]);
 
     const [likedPlaylists, setLikedPlaylists] = useState([]);
@@ -57,7 +65,7 @@ export default function ProfilePage() {
 
     const getProfileData = async() => {
         Axios.post('http://localhost:5000/get_profile_data', {
-            userID: localStorage.getItem("user"),
+            username: username,
         }).then((response) => {
             if (!response.data.error) {
                 setProfile(response.data[0]);
@@ -72,7 +80,7 @@ export default function ProfilePage() {
 
     const getPlaylists = async() => {
         Axios.post('http://localhost:5000/get_user_playlists', {
-            userID: localStorage.getItem("user")
+            userID: profile.userID,
         }).then((response) => {
             if (!response.data.err) {
                 setPlaylists(response.data);
@@ -85,7 +93,7 @@ export default function ProfilePage() {
 
     const getLikedPlaylists = async() => {
         Axios.post('http://localhost:5000/get_user_liked_playlists', {
-            userID: localStorage.getItem("user")
+            userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
                 setLikedPlaylists(response.data);
@@ -98,7 +106,7 @@ export default function ProfilePage() {
 
     const getLikedSongs = async() => {
         Axios.post('http://localhost:5000/get_liked_songs', {
-            userID: localStorage.getItem("user")
+            userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
                 setLikedSongs(response.data);
@@ -132,19 +140,18 @@ export default function ProfilePage() {
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
                     <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
                     <div>
-                        <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
+                            <IconButton variant="soft" color="neutral">
+                                <PersonAddIcon />
+                            </IconButton>
+                        </Box>
                         <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
                     </div>
                     <br />
-                    <Button variant="soft" color="neutral" onClick={() => setProfileOpen(true)}>Edit Profile</Button>
                 </Stack>
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography sx={{ fontSize: 20 }}level="h1">Playlists</Typography>
-                        <IconButton variant="soft" color="neutral" onClick={() => setPlaylistDialogOpen(true)}>
-                            <AddIcon />
-                        </IconButton>
-                    </Box>
+                    <Typography sx={{ fontSize: 20 }}level="h1">Playlists</Typography>
                     <Box
                         sx={{
                             display: 'flex',
@@ -205,33 +212,6 @@ export default function ProfilePage() {
                 </Stack>
             </Box>
             <br /><br />
-            <CreatePlaylistDialog open={playlistDialogOpen} close={() => setPlaylistDialogOpen(false)}/>
-            <Modal open={profileOpen} onClose={() => setProfileOpen(false)}>
-                <ModalDialog
-                    aria-labelledby="basic-modal-dialog-title"
-                    aria-describedby="basic-modal-dialog-description"
-                    sx={{ maxWidth: 500 }}
-                >
-                <Typography id="basic-modal-dialog-title" component="h2">
-                    Edit Profile
-                </Typography>
-                <Stack spacing={2}>
-                    <FormLabel>Name</FormLabel>
-                    <Input autoFocus required placeholder="Name" defaultValue={profileName}
-                        onChange={(e) => {
-                            setProfileName(e.target.value);
-                        }}
-                    />
-                    <FormLabel>Email</FormLabel>
-                    <Input autoFocus required placeholder="Email" defaultValue={profileEmail}
-                        onChange={(e) => {
-                            setProfileEmail(e.target.value);
-                        }}
-                    />
-                    <Button onClick={editProfile}>Save</Button>
-                </Stack>
-                </ModalDialog>
-            </Modal>
         </div>
     );
 }
