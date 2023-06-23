@@ -21,6 +21,7 @@ import Avatar from '@mui/joy/Avatar';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import PlaylistCard from '../components/PlaylistCard';
 import SongCard from '../components/SongCard';
@@ -56,7 +57,6 @@ export default function ProfilePage() {
     const [clickedSong, setClickedSong] = useState(null);
 
     const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
-    const [profileOpen, setProfileOpen] = useState(false);
 
     const [playlistName, setPlaylistName] = useState("");
 
@@ -117,22 +117,6 @@ export default function ProfilePage() {
         });
     }
 
-    const editProfile = () => {
-        //var current_user = parseInt(localStorage.getItem("user"));
-        //console.log(current_user);
-
-        Axios.post("http://localhost:5000/edit_profile", {
-            name: profileName,
-            email: profileEmail,
-            userID: localStorage.getItem("user"),
-        }).then((response) => {
-            console.log(response);
-        });
-
-        setProfileOpen(false);
-        window.location.reload(false);
-    }
-
     return (
         <div className="profile-page">
             <br /><br /><br /><br /><br /><br />
@@ -140,14 +124,36 @@ export default function ProfilePage() {
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
                     <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
                     <div>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
-                            <IconButton variant="soft" color="neutral">
-                                <PersonAddIcon />
-                            </IconButton>
-                        </Box>
-                        <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
+                        <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
+                        <Typography sx={{ fontSize: 20 }}level="body3">{profile.username}</Typography>
                     </div>
+                    <Box sx={{ display: 'flex' }}>
+                        <MailOutlineIcon sx={{ mr: "10px" }}/>
+                        <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
+                    </Box>
+                    <br />
+                    <Typography sx={{ fontSize: 18, width: "300px" }}level="h4">Test description for user profile to fill up space and test things out without creating more entries</Typography>
+                    <br />
+                    <Divider />
+                    <br />
+                    <Typography sx={{ fontSize: 20 }}level="h1">Friends</Typography>
+                    <br />
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 3,
+                            py: 3,
+                            overflow: 'auto',
+                            width: 300,
+                            scrollSnapType: 'x mandatory',
+                            '& > *': {
+                              scrollSnapAlign: 'center',
+                            },
+                            '::-webkit-scrollbar': { display: 'none' },
+                        }}
+                    >
+
+                    </Box>
                     <br />
                 </Stack>
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>

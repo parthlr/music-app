@@ -8,9 +8,14 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Divider from '@mui/material/Divider';
+import Stack from '@mui/joy/Stack';
+import Avatar from '@mui/joy/Avatar';
+import Card from '@mui/joy/Card';
+import Link from '@mui/joy/Link';
 
 import SongCard from '../components/SongCard';
 import PlaylistCard from '../components/PlaylistCard';
+import UserCard from '../components/UserCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 import LoadingOverlay from '../components/LoadingOverlay';
 
@@ -79,6 +84,41 @@ function SongResults(props) {
     return null;
 }
 
+function UserResults(props) {
+    if (props.users.length > 0) {
+        return (
+            <div>
+                <Typography sx={{ fontSize: 30, ml: "240px", pl: "50px" }}level="h1">People</Typography>
+                <br />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        gap: 3,
+                        py: 3,
+                        overflow: 'auto',
+                        width: `calc(100% - 240px)`,
+                        ml: "240px",
+                        pl: "50px",
+                        scrollSnapType: 'x mandatory',
+                        '& > *': {
+                          scrollSnapAlign: 'center',
+                        },
+                        '::-webkit-scrollbar': { display: 'none' },
+                    }}
+                >
+                    {
+                        props.users.map((user) => (
+                            <UserCard user={user} size={150} fontSize={15} />
+                        ))
+                    }
+                </Box>
+                <br />
+            </div>
+        );
+    }
+    return null;
+}
+
 export default function SearchPage(props) {
 
     const [openLoading, setOpenLoading] = useState(false);
@@ -91,6 +131,7 @@ export default function SearchPage(props) {
 
             getPlaylistResults();
             getSongResults();
+            getUserResults();
 
             setOpenLoading(false);
         }, 1500);
@@ -100,6 +141,7 @@ export default function SearchPage(props) {
 
     const [playlists, setPlaylists] = useState([]);
     const [songs, setSongs] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const [openDialog, setOpenDialog] = useState(false);
     const [clickedSong, setClickedSong] = useState(null);
@@ -144,11 +186,32 @@ export default function SearchPage(props) {
         });
     }
 
+    const getUserResults = async() => {
+        if (props.query.length == 0) {
+            setUsers([]);
+            return;
+        }
+        Axios.post('http://localhost:5000/search_users', {
+            search: props.query,
+        }).then((response) => {
+            if (response.data.error) {
+                console.log(response.data.error);
+            } else if (response.data.message) {
+                setUsers([]);
+                console.log(response.data.message);
+            } else {
+                setUsers(response.data);
+                console.log("GOT SEARCH USERS");
+            }
+        });
+    }
+
     return (
         <div className="search-page">
             <br /><br /><br /><br />
             <PlaylistResults playlists={playlists} />
             <SongResults songs={songs} setOpenDialog={setOpenDialog} setClickedSong={setClickedSong} />
+            <UserResults users={users} />
             <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
             <LoadingOverlay open={openLoading} close={() => setOpenLoading(false)} />
         </div>

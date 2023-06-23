@@ -21,6 +21,7 @@ import Avatar from '@mui/joy/Avatar';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import PlaylistCard from '../components/PlaylistCard';
 import SongCard from '../components/SongCard';
@@ -133,10 +134,37 @@ export default function ProfilePage() {
                     <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
                     <div>
                         <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
-                        <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
+                        <Typography sx={{ fontSize: 20 }}level="body3">{profile.username}</Typography>
                     </div>
+                    <Box sx={{ display: 'flex' }}>
+                        <MailOutlineIcon sx={{ mr: "10px" }}/>
+                        <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
+                    </Box>
+                    <br />
+                    <Typography sx={{ fontSize: 18, width: "300px" }}level="h4">Test description for user profile to fill up space and test things out without creating more entries</Typography>
                     <br />
                     <Button variant="soft" color="neutral" onClick={() => setProfileOpen(true)}>Edit Profile</Button>
+                    <br />
+                    <Divider />
+                    <br />
+                    <Typography sx={{ fontSize: 20 }}level="h1">Friends</Typography>
+                    <br />
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            gap: 3,
+                            py: 3,
+                            overflow: 'auto',
+                            width: 300,
+                            scrollSnapType: 'x mandatory',
+                            '& > *': {
+                              scrollSnapAlign: 'center',
+                            },
+                            '::-webkit-scrollbar': { display: 'none' },
+                        }}
+                    >
+                        
+                    </Box>
                 </Stack>
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

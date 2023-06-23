@@ -81,7 +81,7 @@ export default function PlaylistCard(props) {
 
     return (
         <div className="playlist-card">
-            <Card variant="outlined" sx={{ width: 250 }}>
+            <Card variant="plain" sx={{ width: 250 }}>
                 <CardOverflow>
                     <AspectRatio ratio="1" sx={{ maxWidth: 250 }}>
                         <img

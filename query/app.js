@@ -618,6 +618,28 @@ app.post('/search_songs', (req, res) => {
     );
 });
 
+app.post('/search_users', (req, res) => {
+    const {search} = req.body;
+    connection.query(
+        "SELECT * FROM Users WHERE INSTR(username, ?) > 0 OR INSTR(name, ?) > 0 OR INSTR(email, ?) > 0 LIMIT 30",
+        [search, search, search],
+        (err, rows) => {
+            if (!err) {
+                if (rows.length > 0) {
+                    console.log("FOUND USERS WITH SIMILAR NAME TO SEARCH");
+                    res.send(rows);
+                } else {
+                    console.log("NO USERS FOUND WITH SIMILAR NAME TO SEARCH");
+                    res.send({ message: "No users found with search term" });
+                }
+            } else {
+                console.log("FAILED TO SEARCH FOR USERS");
+                res.send({ error: "Error while searching for users" });
+            }
+        }
+    );
+});
+
 module.exports = connection;
 
 app.listen(port, () => console.log(`Listening on port ${port}`))
