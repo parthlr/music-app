@@ -22,7 +22,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import LikeButton from '../components/LikeButton';
 
 function ActionMenu(props) {
-    if (props.inPlaylist) {
+    if (props.inPlaylist && props.playlistOwner) {
         return (
             <Menu
                 id="basic-menu"
@@ -187,7 +187,7 @@ export default function SongCard(props) {
                                 <IconButton variant="plain" color="neutral" onClick={handleClick}>
                                     <MoreVert />
                                 </IconButton>
-                                <ActionMenu inPlaylist={props.inPlaylist} anchorEl={anchorEl} open={open} handleClose={handleClose} addToPlaylist={addToPlaylist} deleteFromPlaylist={deleteFromPlaylist} />
+                                <ActionMenu inPlaylist={props.inPlaylist} playlistOwner={props.playlistOwner} anchorEl={anchorEl} open={open} handleClose={handleClose} addToPlaylist={addToPlaylist} deleteFromPlaylist={deleteFromPlaylist} />
                             </Grid>
                     </ListItemButton>
                 </Grid>

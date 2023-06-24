@@ -25,6 +25,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import PlaylistCard from '../components/PlaylistCard';
 import SongCard from '../components/SongCard';
+import UserCard from '../components/UserCard';
 import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
 
 export default function ProfilePage() {
@@ -36,9 +37,12 @@ export default function ProfilePage() {
         getPlaylists();
         getLikedPlaylists();
         getLikedSongs();
+        getFriends();
     },[]);
 
     const [profile, setProfile] = useState([]);
+    const [friends, setFriends] = useState([]);
+
     const [playlists, setPlaylists] = useState([]);
 
     const [likedPlaylists, setLikedPlaylists] = useState([]);
@@ -110,6 +114,19 @@ export default function ProfilePage() {
         });
     }
 
+    const getFriends = async() => {
+        Axios.post('http://localhost:5000/get_friends', {
+            userID: localStorage.getItem("user")
+        }).then((response) => {
+            if (!response.data.error) {
+                setFriends(response.data);
+                console.log("GOT FRIENDS");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
     const editProfile = () => {
         //var current_user = parseInt(localStorage.getItem("user"));
         //console.log(current_user);
@@ -148,12 +165,10 @@ export default function ProfilePage() {
                     <Divider />
                     <br />
                     <Typography sx={{ fontSize: 20 }}level="h1">Friends</Typography>
-                    <br />
                     <Box
                         sx={{
                             display: 'flex',
                             gap: 3,
-                            py: 3,
                             overflow: 'auto',
                             width: 300,
                             scrollSnapType: 'x mandatory',
@@ -163,8 +178,13 @@ export default function ProfilePage() {
                             '::-webkit-scrollbar': { display: 'none' },
                         }}
                     >
-                        
+                        {
+                            friends.map((friend) => (
+                                <UserCard user={friend} size={75} fontSize={12} />
+                            ))
+                        }
                     </Box>
+                    <br />
                 </Stack>
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

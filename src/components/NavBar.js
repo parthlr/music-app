@@ -16,19 +16,38 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Avatar from '@mui/joy/Avatar';
+import Chip from '@mui/joy/Chip';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import LogoutIcon from '@mui/icons-material/Logout';
 import AspectRatio from '@mui/joy/AspectRatio';
 import * as Auth from '../services/Auth';
+
 import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
+import FriendRequestsDialog from '../components/FriendRequestsDialog';
 
 const drawerWidth = 240;
 
 function LoginButton(props) {
+
+    useEffect((e) => {
+        getNumFriendRequests();
+    },[]);
+
+    const [requests, setRequests] = useState(0);
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const [openFriendRequestsDialog, setOpenFriendRequestsDialog] = useState(false);
 
     const goToLogin = () => {
         props.navigate('/login');
@@ -38,9 +57,75 @@ function LoginButton(props) {
         props.navigate('/register');
     }
 
+    const logout = () => {
+        Auth.logout();
+        props.navigate('/');
+        window.location.reload(false);
+    }
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const getNumFriendRequests = async() => {
+        Axios.post('http://localhost:5000/get_num_friend_requests', {
+            userID: localStorage.getItem("user"),
+        }).then((response) => {
+            if (!response.data.error) {
+                setRequests(response.data[0].count);
+                console.log("Count: " + response.data[0].count);
+                console.log(response);
+            } else {
+                console.log(response);
+                console.log(response.data.error);
+            }
+        });
+    }
+
     if (Auth.isLoggedIn()) {
         return (
-            <Button href="/" color="inherit" onClick={Auth.logout}>Logout</Button>
+            <Box sx={{ flexGrow: 0 }}>
+                <IconButton onClick={handleClick} sx={{ p: 0 }}>
+                    <Avatar color="primary" variant="solid"/>
+                </IconButton>
+                <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="basic-demo-button"
+                    placement="bottom-start"
+                    sx={{ mt: '45px' }}
+                >
+                    <MenuItem onClick={() => setOpenFriendRequestsDialog(true)}>
+                        <ListItemIcon>
+                            <Chip size="sm" color="danger">{requests}</Chip>
+                        </ListItemIcon>
+                        Notifications
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={logout}>
+                        <ListItemIcon>
+                            <LogoutIcon />
+                        </ListItemIcon>
+                        Logout
+                    </MenuItem>
+                </Menu>
+                <FriendRequestsDialog open={openFriendRequestsDialog} close={() => setOpenFriendRequestsDialog(false)}/>
+            </Box>
         );
     }
     return (

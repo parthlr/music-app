@@ -640,6 +640,106 @@ app.post('/search_users', (req, res) => {
     );
 });
 
+app.post('/get_friends', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT userID, username, name, email FROM Users WHERE userID IN (SELECT userID_2 FROM friends WHERE userID_1 = ?) LIMIT 5',
+        userID,
+        (err, rows) => {
+            if (!err) {
+                console.log("FOUND ALL USERS FRIENDS");
+                res.send(rows);
+            } else {
+                console.log("COULD NOT GET FRIENDS");
+                res.send({ error: "Error getting friends" });
+            }
+        }
+    )
+});
+
+app.post('/send_friend_request', (req, res) => {
+    const {to_userID, from_userID} = req.body;
+    connection.query(
+        'INSERT INTO friend_requests (to_userID , from_userID) VALUES (?,?)',
+        [to_userID, from_userID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY SENT FRIEND REQUEST");
+                res.send({message: "Sent friend request"});
+            } else {
+                console.log("FAILED TO SEND FRIEND REQUEST");
+                res.send({error: "Error sending friend request"});
+            }
+        }
+    );
+});
+
+app.post('/get_num_friend_requests', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT COUNT(to_userID) AS count FROM friend_requests WHERE to_userID = ?',
+        userID,
+        (err, row) => {
+            if (!err) {
+                console.log("GOT NUMBER OF FRIEND REQUESTS FOR USER");
+                res.send(row);
+            } else {
+                console.log("FAILED TO GET NUMBER OF FRIEND REQUESTS FOR USER");
+                res.send({ error: "Error getting number of user friend requests" });
+            }
+        }
+    );
+});
+
+app.post('/get_friend_requests', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT userID, username, name, email FROM Users WHERE userID IN (SELECT from_userID FROM friend_requests WHERE to_userID = ?)',
+        userID,
+        (err, rows) => {
+            if (!err) {
+                console.log("GOT ALL FRIEND REQUESTS");
+                res.send(rows);
+            } else {
+                console.log("FAILED TO GET FRIEND REQUESTS");
+                res.send({ error: "Error getting friend requests" });
+            }
+        }
+    );
+});
+
+app.post('/accept_friend_request', (req, res) => {
+    const {to_userID, from_userID} = req.body;
+    connection.query(
+        'CALL accept_friend_request(?,?)',
+        [to_userID, from_userID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY ACCEPTED FRIEND REQUEST");
+            } else {
+                console.log("FAILED TO ACCEPT FRIEND REQUEST");
+                res.send({ error: "Error accepting friend request" });
+            }
+        }
+    );
+});
+
+app.post('/reject_friend_request', (req, res) => {
+    const {to_userID, from_userID} = req.body;
+    connection.query(
+        'DELETE FROM friend_requests WHERE to_userID = ? AND from_userID = ?',
+        [to_userID, from_userID],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY REJECTED FRIEND REQUEST");
+            } else {
+                console.log("FAILED TO REJECT FRIEND REQUEST");
+                res.send({ error: "Error rejecting friend request" });
+            }
+        }
+    )
+})
+
 module.exports = connection;
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

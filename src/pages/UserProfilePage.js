@@ -25,6 +25,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import PlaylistCard from '../components/PlaylistCard';
 import SongCard from '../components/SongCard';
+import UserCard from '../components/UserCard';
 import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
 
 export default function ProfilePage() {
@@ -45,7 +46,10 @@ export default function ProfilePage() {
         getPlaylists();
         getLikedPlaylists();
         getLikedSongs();
+        getFriends();
     },[username, profile.userID]);
+
+    const [friends, setFriends] = useState([]);
 
     const [playlists, setPlaylists] = useState([]);
 
@@ -117,6 +121,32 @@ export default function ProfilePage() {
         });
     }
 
+    const getFriends = async() => {
+        Axios.post('http://localhost:5000/get_friends', {
+            userID: profile.userID,
+        }).then((response) => {
+            if (!response.data.error) {
+                setFriends(response.data);
+                console.log("GOT FRIENDS");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const sendFriendRequest = () => {
+        Axios.post('http://localhost:5000/send_friend_request', {
+            to_userID: profile.userID,
+            from_userID: localStorage.getItem("user"),
+        }).then((response) => {
+            if (!response.data.error) {
+                console.log("SEND FRIEND REQUEST");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
     return (
         <div className="profile-page">
             <br /><br /><br /><br /><br /><br />
@@ -124,7 +154,12 @@ export default function ProfilePage() {
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
                     <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
                     <div>
-                        <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
+                            <IconButton color="neutral" variant="soft" onClick={sendFriendRequest}>
+                                <PersonAddIcon />
+                            </IconButton>
+                        </Box>
                         <Typography sx={{ fontSize: 20 }}level="body3">{profile.username}</Typography>
                     </div>
                     <Box sx={{ display: 'flex' }}>
@@ -137,12 +172,10 @@ export default function ProfilePage() {
                     <Divider />
                     <br />
                     <Typography sx={{ fontSize: 20 }}level="h1">Friends</Typography>
-                    <br />
                     <Box
                         sx={{
                             display: 'flex',
                             gap: 3,
-                            py: 3,
                             overflow: 'auto',
                             width: 300,
                             scrollSnapType: 'x mandatory',
@@ -152,7 +185,11 @@ export default function ProfilePage() {
                             '::-webkit-scrollbar': { display: 'none' },
                         }}
                     >
-
+                        {
+                            friends.map((friend) => (
+                                <UserCard user={friend} size={75} fontSize={12} />
+                            ))
+                        }
                     </Box>
                     <br />
                 </Stack>
