@@ -47,8 +47,6 @@ function LoginButton(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
-    const [openFriendRequestsDialog, setOpenFriendRequestsDialog] = useState(false);
-
     const goToLogin = () => {
         props.navigate('/login');
     }
@@ -61,6 +59,11 @@ function LoginButton(props) {
         Auth.logout();
         props.navigate('/');
         window.location.reload(false);
+    }
+
+    const openNotifications = () => {
+        props.openRequests();
+        setAnchorEl(null);
     }
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -110,7 +113,7 @@ function LoginButton(props) {
                     placement="bottom-start"
                     sx={{ mt: '45px' }}
                 >
-                    <MenuItem onClick={() => setOpenFriendRequestsDialog(true)}>
+                    <MenuItem onClick={openNotifications}>
                         <ListItemIcon>
                             <Chip size="sm" color="danger">{requests}</Chip>
                         </ListItemIcon>
@@ -124,7 +127,6 @@ function LoginButton(props) {
                         Logout
                     </MenuItem>
                 </Menu>
-                <FriendRequestsDialog open={openFriendRequestsDialog} close={() => setOpenFriendRequestsDialog(false)}/>
             </Box>
         );
     }
@@ -268,6 +270,8 @@ export default function NavBar(props) {
 
     const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
 
+    const [openFriendRequestsDialog, setOpenFriendRequestsDialog] = useState(false);
+
     const navigate = useNavigate();
 
     const goToHome = () => {
@@ -301,7 +305,7 @@ export default function NavBar(props) {
                         <Input startDecorator={<SearchIcon />} onChange={(e) => searchBarTyped(e)}/>
                         <Box sx={{ flexGrow: 1 }} />
                         <Box sx={{ display: 'flex', flexDirection: 'row-reverse', }}>
-                            <LoginButton navigate={navigate} />
+                            <LoginButton navigate={navigate} openRequests={() => setOpenFriendRequestsDialog(true)}/>
                         </Box>
                     </Toolbar>
                 </AppBar>
@@ -378,6 +382,7 @@ export default function NavBar(props) {
                 </Box>
             </Box>
             <CreatePlaylistDialog open={playlistDialogOpen} close={() => setPlaylistDialogOpen(false)}/>
+            <FriendRequestsDialog open={openFriendRequestsDialog} close={() => setOpenFriendRequestsDialog(false)}/>
         </div>
     );
 }

@@ -20,7 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 export default function FriendRequestsDialog(props) {
 
-    useEffect(() => {
+    useEffect((e) => {
         getFriendRequests();
     },[]);
 
