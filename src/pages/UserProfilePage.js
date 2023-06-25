@@ -21,6 +21,7 @@ import Avatar from '@mui/joy/Avatar';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import PlaylistCard from '../components/PlaylistCard';
@@ -47,9 +48,14 @@ export default function ProfilePage() {
         getLikedPlaylists();
         getLikedSongs();
         getFriends();
+        isFriends();
+        isFriendshipPending();
     },[username, profile.userID]);
 
     const [friends, setFriends] = useState([]);
+
+    const [isUsersFriends, setIsFriends] = useState(false);
+    const [friendshipPending, setFriendshipPending] = useState(false);
 
     const [playlists, setPlaylists] = useState([]);
 
@@ -121,6 +127,34 @@ export default function ProfilePage() {
         });
     }
 
+    const isFriends = async() => {
+        Axios.post('http://localhost:5000/is_friends', {
+            userID_1: profile.userID,
+            userID_2: localStorage.getItem("user"),
+        }).then((response) => {
+            if (!response.data.error) {
+                setIsFriends(response.data.friends);
+                console.log("GOT WHETHER USERS ARE FRIENDS");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const isFriendshipPending = async() => {
+        Axios.post('http://localhost:5000/is_friendship_pending', {
+            to_userID: profile.userID,
+            from_userID: localStorage.getItem("user"),
+        }).then((response) => {
+            if (!response.data.error) {
+                setFriendshipPending(response.data.pending_friendship);
+                console.log("GOT IF FRIENDSHIP IS PENDING");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
     const getFriends = async() => {
         Axios.post('http://localhost:5000/get_friends', {
             userID: profile.userID,
@@ -140,8 +174,40 @@ export default function ProfilePage() {
             from_userID: localStorage.getItem("user"),
         }).then((response) => {
             if (!response.data.error) {
-                console.log("SEND FRIEND REQUEST");
+                console.log("SENT FRIEND REQUEST");
+                setFriendshipPending(true);
             } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const cancelFriendRequest = () => {
+        Axios.post('http://localhost:5000/cancel_friend_request', {
+            to_userID: profile.userID,
+            from_userID: localStorage.getItem("user"),
+        }).then((response) => {
+            if (!response.data.error) {
+                console.log("CANCELLED FRIEND REQUEST");
+                setFriendshipPending(false);
+                setIsFriends(false);
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const removeFriend = () => {
+        Axios.post('http://localhost:5000/remove_friend', {
+            userID_1: profile.userID,
+            userID_2: localStorage.getItem("user"),
+        }).then((response) => {
+            if (response.data.message) {
+                console.log("REMOVED FRIEND");
+                setFriendshipPending(false);
+                setIsFriends(false);
+            }
+            if (response.data.error) {
                 console.log(response.data.error);
             }
         });
@@ -156,9 +222,13 @@ export default function ProfilePage() {
                     <div>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
-                            <IconButton color="neutral" variant="soft" onClick={sendFriendRequest}>
-                                <PersonAddIcon />
-                            </IconButton>
+                            {
+                                (friendshipPending) ?
+                                    <Button color="neutral" variant="outlined" onClick={cancelFriendRequest}>Cancel Request</Button> :
+                                    <IconButton color={isUsersFriends ? "danger" : "neutral"} variant={isUsersFriends ? "outlined" : "soft"} onClick={isUsersFriends ? removeFriend : sendFriendRequest}>
+                                        {isUsersFriends ? <PersonRemoveIcon /> : <PersonAddIcon />}
+                                    </IconButton>
+                            }
                         </Box>
                         <Typography sx={{ fontSize: 20 }}level="body3">{profile.username}</Typography>
                     </div>

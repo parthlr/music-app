@@ -640,6 +640,50 @@ app.post('/search_users', (req, res) => {
     );
 });
 
+app.post('/is_friends', (req, res) => {
+    const {userID_1, userID_2} = req.body;
+    connection.query(
+        'SELECT * FROM friends WHERE userID_1 = ? AND userID_2 = ?',
+        [userID_1, userID_2],
+        (err, rows) => {
+            if (!err) {
+                if (rows.length > 0) {
+                    console.log("USER IS FRIENDS WITH THIS PERSON");
+                    res.send({ friends: true });
+                } else {
+                    console.log("USER IS NOT FRIENDS WITH THIS PERSON");
+                    res.send({ friends: false });
+                }
+            } else {
+                console.log("FAILED TO DETERMINE IF USERS ARE FRIENDS");
+                res.send({ error: "Error getting if users are friends" });
+            }
+        }
+    )
+});
+
+app.post('/is_friendship_pending', (req, res) => {
+    const {to_userID, from_userID} = req.body;
+    connection.query(
+        'SELECT * FROM friend_requests WHERE to_userID = ? AND from_userID = ?',
+        [to_userID, from_userID],
+        (err, rows) => {
+            if (!err) {
+                if (rows.length > 0) {
+                    console.log("FRIENDSHIP IS PENDING");
+                    res.send({ pending_friendship: true });
+                } else {
+                    console.log("FRIENDSHIP IS NOT PENDING");
+                    res.send({ pending_friendship: false });
+                }
+            } else {
+                console.log("FAILED TO GET IF FRIENDSHIP IS PENDING OR NOT");
+                res.send({ error: "Error getting if friendship is pending" });
+            }
+        }
+    );
+});
+
 app.post('/get_friends', (req, res) => {
     const {userID} = req.body;
     connection.query(
@@ -672,6 +716,22 @@ app.post('/send_friend_request', (req, res) => {
             }
         }
     );
+});
+
+app.post('/cancel_friend_request', (req, res) => {
+    const {to_userID, from_userID} = req.body;
+    connection.query(
+        'DELETE FROM friend_requests WHERE to_userID = ? AND from_userID = ?',
+        [to_userID, from_userID],
+        (err, result) => {
+            if (!err) {
+                console.log("FRIEND REQUEST DELETED");
+            } else {
+                console.log("FAILED TO DELETE FRIEND REQUEST");
+                res.send({ error: "Error cancelling friend request" });
+            }
+        }
+    )
 });
 
 app.post('/get_num_friend_requests', (req, res) => {
@@ -738,7 +798,24 @@ app.post('/reject_friend_request', (req, res) => {
             }
         }
     )
-})
+});
+
+app.post('/remove_friend', (req, res) => {
+    const {userID_1, userID_2} = req.body;
+    connection.query(
+        'CALL remove_friend(?,?)',
+        [userID_1, userID_2],
+        (err, result) => {
+            if (!err) {
+                console.log("SUCCESSFULLY REMOVED FRIEND");
+                res.send({ message: "Removed friend" });
+            } else {
+                console.log("FAILED TO REMOVE FRIEND");
+                res.send({ error: "Error removing friend" });
+            }
+        }
+    );
+});
 
 module.exports = connection;
 
