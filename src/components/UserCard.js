@@ -11,7 +11,7 @@ export default function UserCard(props) {
     return (
         <Card variant="plain" color="neutral">
             <Stack spacing={2} align="center">
-                <Avatar color="primary" variant="solid" sx={{ width: props.size + "px", height: props.size + "px" }}/>
+                <Avatar color={props.user.profile_color} variant="solid" sx={{ width: props.size + "px", height: props.size + "px" }}/>
                 <div>
                     <Link
                         overlay

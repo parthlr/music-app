@@ -151,11 +151,11 @@ app.post('/delete_playlist', (req, res) => {
 });
 
 app.post('/edit_profile', (req, res) => {
-    const {name, email, userID} = req.body;
+    const {name, email, about, profile_color, userID} = req.body;
 
     connection.query(
-        "UPDATE Users SET name = ?, email = ? WHERE userID = ?",
-        [name, email, userID],
+        "UPDATE Users SET name = ?, email = ?, about = ?, profile_color = ? WHERE userID = ?",
+        [name, email, about, profile_color, userID],
         (err, row) => {
             if (!err) {
                 console.log("UPDATED USER " + userID);
@@ -205,7 +205,7 @@ app.post('/playlist', (req, res) => {
 app.post('/get_profile_data', (req, res) => {
     const {userID, username} = req.body;
     connection.query(
-        'SELECT userID, username, name, email FROM Users WHERE userID = ? OR username = ?',
+        'SELECT userID, username, name, email, about, profile_color FROM Users WHERE userID = ? OR username = ?',
         [userID, username],
         (err, row) => {
             if (!err) {
@@ -687,7 +687,7 @@ app.post('/is_friendship_pending', (req, res) => {
 app.post('/get_friends', (req, res) => {
     const {userID} = req.body;
     connection.query(
-        'SELECT userID, username, name, email FROM Users WHERE userID IN (SELECT userID_2 FROM friends WHERE userID_1 = ?) LIMIT 5',
+        'SELECT userID, username, name, email, about, profile_color FROM Users WHERE userID IN (SELECT userID_2 FROM friends WHERE userID_1 = ?) LIMIT 5',
         userID,
         (err, rows) => {
             if (!err) {
@@ -754,7 +754,7 @@ app.post('/get_num_friend_requests', (req, res) => {
 app.post('/get_friend_requests', (req, res) => {
     const {userID} = req.body;
     connection.query(
-        'SELECT userID, username, name, email FROM Users WHERE userID IN (SELECT from_userID FROM friend_requests WHERE to_userID = ?)',
+        'SELECT userID, username, name, email, about, profile_color FROM Users WHERE userID IN (SELECT from_userID FROM friend_requests WHERE to_userID = ?)',
         userID,
         (err, rows) => {
             if (!err) {

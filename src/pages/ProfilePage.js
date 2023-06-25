@@ -5,6 +5,7 @@ import Axios from "axios";
 import Button from '@mui/joy/Button';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
+import Textarea from '@mui/joy/Textarea';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import FormLabel from '@mui/joy/FormLabel';
@@ -13,6 +14,9 @@ import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/joy/Typography';
 import Grid from '@mui/material/Grid';
@@ -59,6 +63,10 @@ export default function ProfilePage() {
 
     const [profileName, setProfileName] = useState("");
     const [profileEmail, setProfileEmail] = useState("");
+    const [profileAbout, setProfileAbout] = useState("");
+    const [profileColor, setProfileColor] = useState("primary");
+
+    const maxAboutLength = 500;
 
     const getProfileData = async() => {
         Axios.post('http://localhost:5000/get_profile_data', {
@@ -68,6 +76,8 @@ export default function ProfilePage() {
                 setProfile(response.data[0]);
                 setProfileName(response.data[0].name);
                 setProfileEmail(response.data[0].email);
+                setProfileAbout(response.data[0].about);
+                setProfileColor(response.data[0].profile_color);
                 console.log("GOT PROFILE DATA");
             } else {
                 console.log(response.data.error);
@@ -134,6 +144,8 @@ export default function ProfilePage() {
         Axios.post("http://localhost:5000/edit_profile", {
             name: profileName,
             email: profileEmail,
+            about: profileAbout,
+            profile_color: profileColor,
             userID: localStorage.getItem("user"),
         }).then((response) => {
             console.log(response);
@@ -143,12 +155,25 @@ export default function ProfilePage() {
         window.location.reload(false);
     }
 
+    const updateProfileColor = (
+        event: React.SyntheticEvent | null,
+        newColor: string | null
+    ) => {
+        setProfileColor(newColor);
+    };
+
+    const updateAboutBox = (e) => {
+        if (e.target.value.length <= maxAboutLength) {
+            setProfileAbout(e.target.value);
+        }
+    }
+
     return (
         <div className="profile-page">
             <br /><br /><br /><br /><br /><br />
             <Box sx={{ display: 'flex', justifyContent: 'center', width: `calc(100% - 50px)`, ml: "50px", pl: "50px", pr: "50px" }}>
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
-                    <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
+                    <Avatar color={profile.profile_color} variant="solid" sx={{ width: "300px", height: "300px" }}/>
                     <div>
                         <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
                         <Typography sx={{ fontSize: 20 }}level="body3">{profile.username}</Typography>
@@ -158,7 +183,7 @@ export default function ProfilePage() {
                         <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
                     </Box>
                     <br />
-                    <Typography sx={{ fontSize: 18, width: "300px" }}level="h4">Test description for user profile to fill up space and test things out without creating more entries</Typography>
+                    <Typography sx={{ fontSize: 18, width: "300px" }}level="h4">{profile.about}</Typography>
                     <br />
                     <Button variant="soft" color="neutral" onClick={() => setProfileOpen(true)}>Edit Profile</Button>
                     <br />
@@ -260,22 +285,49 @@ export default function ProfilePage() {
                     aria-describedby="basic-modal-dialog-description"
                     sx={{ maxWidth: 500 }}
                 >
-                <Typography id="basic-modal-dialog-title" component="h2">
-                    Edit Profile
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography id="basic-modal-dialog-title" component="h2">
+                        Edit Profile
+                    </Typography>
+                    <Select defaultValue={profileColor} size="sm" onChange={updateProfileColor} >
+                        <Option value="primary"><ListItemDecorator><Avatar color="primary" variant="solid" size="sm" /></ListItemDecorator></Option>
+                        <Option value="neutral"><ListItemDecorator><Avatar color="neutral" variant="solid" size="sm" /></ListItemDecorator></Option>
+                        <Option value="danger"><ListItemDecorator><Avatar color="danger" variant="solid" size="sm" /></ListItemDecorator></Option>
+                        <Option value="info"><ListItemDecorator><Avatar color="info" variant="solid" size="sm" /></ListItemDecorator></Option>
+                        <Option value="success"><ListItemDecorator><Avatar color="success" variant="solid" size="sm" /></ListItemDecorator></Option>
+                        <Option value="warning"><ListItemDecorator><Avatar color="warning" variant="solid" size="sm" /></ListItemDecorator></Option>
+                    </Select>
+                </Box>
                 <Stack spacing={2}>
-                    <FormLabel>Name</FormLabel>
-                    <Input autoFocus required placeholder="Name" defaultValue={profileName}
-                        onChange={(e) => {
-                            setProfileName(e.target.value);
-                        }}
-                    />
-                    <FormLabel>Email</FormLabel>
-                    <Input autoFocus required placeholder="Email" defaultValue={profileEmail}
-                        onChange={(e) => {
-                            setProfileEmail(e.target.value);
-                        }}
-                    />
+                    <div>
+                        <FormLabel>Name</FormLabel>
+                        <Input autoFocus required placeholder="Name" defaultValue={profileName}
+                            onChange={(e) => {
+                                setProfileName(e.target.value);
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <FormLabel>Email</FormLabel>
+                        <Input autoFocus required placeholder="Email" defaultValue={profileEmail}
+                            onChange={(e) => {
+                                setProfileEmail(e.target.value);
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <FormLabel>About</FormLabel>
+                        <Textarea minRows={3} value={profileAbout} defaultValue={profileAbout}
+                        endDecorator={
+                            <Typography level="body3" sx={{ ml: 'auto' }}>
+                                {profileAbout.length}/{maxAboutLength} character(s)
+                            </Typography>
+                        }
+                            onChange={(e) => {
+                                updateAboutBox(e);
+                            }}
+                        />
+                    </div>
                     <Button onClick={editProfile}>Save</Button>
                 </Stack>
                 </ModalDialog>

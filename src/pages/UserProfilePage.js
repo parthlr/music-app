@@ -72,6 +72,8 @@ export default function ProfilePage() {
 
     const [profileName, setProfileName] = useState("");
     const [profileEmail, setProfileEmail] = useState("");
+    const [profileAbout, setProfileAbout] = useState("");
+    const [profileColor, setProfileColor] = useState("primary");
 
     const getProfileData = async() => {
         Axios.post('http://localhost:5000/get_profile_data', {
@@ -81,6 +83,8 @@ export default function ProfilePage() {
                 setProfile(response.data[0]);
                 setProfileName(response.data[0].name);
                 setProfileEmail(response.data[0].email);
+                setProfileAbout(response.data[0].about);
+                setProfileColor(response.data[0].profile_color);
                 console.log("GOT PROFILE DATA");
             } else {
                 console.log(response.data.error);
@@ -218,7 +222,7 @@ export default function ProfilePage() {
             <br /><br /><br /><br /><br /><br />
             <Box sx={{ display: 'flex', justifyContent: 'center', width: `calc(100% - 50px)`, ml: "50px", pl: "50px", pr: "50px" }}>
                 <Stack spacing={2} sx={{ pl: "50px", pr: "50px" }}>
-                    <Avatar color="primary" variant="solid" sx={{ width: "300px", height: "300px" }}/>
+                    <Avatar color={profile.profile_color} variant="solid" sx={{ width: "300px", height: "300px" }}/>
                     <div>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Typography sx={{ fontSize: 25 }}level="h1">{profile.name}</Typography>
@@ -237,7 +241,7 @@ export default function ProfilePage() {
                         <Typography sx={{ fontSize: 20 }}level="body3">{profile.email}</Typography>
                     </Box>
                     <br />
-                    <Typography sx={{ fontSize: 18, width: "300px" }}level="h4">Test description for user profile to fill up space and test things out without creating more entries</Typography>
+                    <Typography sx={{ fontSize: 18, width: "300px" }}level="h4">{profile.about}</Typography>
                     <br />
                     <Divider />
                     <br />
