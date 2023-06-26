@@ -574,6 +574,23 @@ app.get('/get_songs', (req, res) => {
     );
 });
 
+app.post('/get_home_page_people', (req, res) => {
+    const {userID} = req.body;
+    connection.query(
+        'SELECT * FROM Users WHERE userID != ? ORDER BY RAND() LIMIT 3',
+        userID,
+        (err, rows) => {
+            if (!err) {
+                console.log("GOT RANDOM USERS");
+                res.send(rows);
+            } else {
+                console.log("FAILED TO GET RANDOM USERS");
+                res.send({ error: "Error getting random people" });
+            }
+        }
+    );
+});
+
 app.post('/search_playlists', (req, res) => {
     const {search} = req.body;
     connection.query(

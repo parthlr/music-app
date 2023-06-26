@@ -41,11 +41,14 @@ export default function PlaylistCard(props) {
     useEffect((e) => {
         getPlaylistBackgroundImage();
         isPlaylistLiked();
+        getPlaylistCreator();
     },[props.playlist.playlistID]);
 
     const [playlistImage, setPlaylistImage] = useState("");
 
     const [liked, setLiked] = useState(false);
+
+    const [creator, setCreator] = useState([]);
 
     const getPlaylistBackgroundImage = async() => {
         Axios.post('http://localhost:5000/get_playlist_image', {
@@ -79,6 +82,19 @@ export default function PlaylistCard(props) {
         });
     }
 
+    const getPlaylistCreator = async() => {
+        Axios.post('http://localhost:5000/get_playlist_creator', {
+            playlistID: props.playlist.playlistID,
+        }).then((response) => {
+            if (!response.data.error) {
+                setCreator(response.data[0]);
+                console.log(response);
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
     return (
         <div className="playlist-card">
             <Card variant="plain" sx={{ width: 250 }}>
@@ -103,7 +119,7 @@ export default function PlaylistCard(props) {
                         {props.playlist.name}
                     </Link>
                 </Typography>
-                <Typography level="body3">Test description that is supposed to be long so that it can fill up space</Typography>
+                <Typography level="body3" sx={{ fontSize: 15 }}>{creator.name}</Typography>
             </Card>
         </div>
     );

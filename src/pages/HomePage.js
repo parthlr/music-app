@@ -13,6 +13,7 @@ import ListItemContent from '@mui/joy/ListItemContent';
 
 import SongCard from '../components/SongCard';
 import PlaylistCard from '../components/PlaylistCard';
+import UserCard from '../components/UserCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 
 export default function HomePage() {
@@ -22,6 +23,7 @@ export default function HomePage() {
         getLikedPlaylists();
         getRecommendedPlaylists();
         getRandomSongs();
+        getRandomPeople();
     },[]);
 
     const [songs, setSongs] = useState([]);
@@ -32,6 +34,7 @@ export default function HomePage() {
     const [playlists, setPlaylists] = useState([]);
     const [likedPlaylists, setLikedPlaylists] = useState([]);
     const [recommendedPlaylists, setRecommendedPlaylists] = useState([]);
+    const [people, setPeople] = useState([]);
 
     const getPlaylists = async() => {
         Axios.post('http://localhost:5000/get_user_playlists', {
@@ -78,6 +81,19 @@ export default function HomePage() {
             if (!response.data.error) {
                 setSongs(response.data);
                 console.log("GOT RANDOM SONGS");
+            } else {
+                console.log(response.data.error);
+            }
+        });
+    }
+
+    const getRandomPeople = async() => {
+        Axios.post('http://localhost:5000/get_home_page_people', {
+            userID: localStorage.getItem("user")
+        }).then((response) => {
+            if (!response.data.error) {
+                setPeople(response.data);
+                console.log("GOT HOME PAGE RANDOM PEOPLE");
             } else {
                 console.log(response.data.error);
             }
@@ -146,7 +162,6 @@ export default function HomePage() {
                         ))
                     }
                 </Grid>
-                <Divider orientation="vertical" />
                 <Grid
                     container
                     spacing={3}
@@ -161,7 +176,17 @@ export default function HomePage() {
                     }
                 </Grid>
             </Box>
+            <br /><br />
+            <Typography sx={{ fontSize: 30, ml: "240px", pl: "50px" }}level="h1">Suggested People</Typography>
             <br />
+            <Stack spacing={5} direction="row" sx={{ ml: "240px", pl: "50px", pr: "50px" }}>
+                {
+                    people.map((user) => (
+                        <UserCard user={user} size={150} fontSize={15} />
+                    ))
+                }
+            </Stack>
+            <br /><br />
             <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
         </div>
     )
