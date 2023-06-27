@@ -290,12 +290,12 @@ export default function ProfilePage() {
                         Edit Profile
                     </Typography>
                     <Select defaultValue={profileColor} size="sm" onChange={updateProfileColor} >
-                        <Option value="primary"><ListItemDecorator><Avatar color="primary" variant="solid" size="sm" /></ListItemDecorator></Option>
-                        <Option value="neutral"><ListItemDecorator><Avatar color="neutral" variant="solid" size="sm" /></ListItemDecorator></Option>
-                        <Option value="danger"><ListItemDecorator><Avatar color="danger" variant="solid" size="sm" /></ListItemDecorator></Option>
-                        <Option value="info"><ListItemDecorator><Avatar color="info" variant="solid" size="sm" /></ListItemDecorator></Option>
-                        <Option value="success"><ListItemDecorator><Avatar color="success" variant="solid" size="sm" /></ListItemDecorator></Option>
-                        <Option value="warning"><ListItemDecorator><Avatar color="warning" variant="solid" size="sm" /></ListItemDecorator></Option>
+                        <Option value="primary" label={<Avatar color="primary" variant="solid" size="sm" />}><Avatar color="primary" variant="solid" size="sm" /></Option>
+                        <Option value="neutral" label={<Avatar color="neutral" variant="solid" size="sm" />}><Avatar color="neutral" variant="solid" size="sm" /></Option>
+                        <Option value="danger" label={<Avatar color="danger" variant="solid" size="sm" />}><Avatar color="danger" variant="solid" size="sm" /></Option>
+                        <Option value="info" label={<Avatar color="info" variant="solid" size="sm" />}><Avatar color="info" variant="solid" size="sm" /></Option>
+                        <Option value="success" label={<Avatar color="success" variant="solid" size="sm" />}><Avatar color="success" variant="solid" size="sm" /></Option>
+                        <Option value="warning" label={<Avatar color="warning" variant="solid" size="sm" />}><Avatar color="warning" variant="solid" size="sm" /></Option>
                     </Select>
                 </Box>
                 <Stack spacing={2}>

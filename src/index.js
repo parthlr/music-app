@@ -30,45 +30,6 @@ import { useColorScheme as useMaterialColorScheme } from '@mui/material/styles';
 
 const materialTheme = materialExtendTheme();
 
-function User(props) {
-    return (
-        <div>
-            <p>{props.user.userID}</p>
-            <p>{props.user.name}</p>
-            <p>{props.user.email}</p>
-        </div>
-    )
-};
-
-/*export default function UserPage() {
-    useEffect(() => {
-        getUsers();
-    },[]);
-
-    const [users, setUsers] = useState([]);
-
-    const getUsers = async() => {
-        try {
-            const response = await axios.get('http://localhost:5000/users');
-            setUsers(response.data);
-            console.log(response);
-        } catch (err) {
-            console.log("ERROR fetching data");
-            console.log(err);
-        }
-    }
-
-    return (
-        <div className="user-page">
-            {
-            users.map((user) => (
-                <User user={user} />
-            ))
-            }
-        </div>
-    )
-}*/
-
 const DarkMode = () => {
   const { mode, setMode } = useMaterialColorScheme();
   const { setMode: setJoyMode } = useJoyColorScheme();
