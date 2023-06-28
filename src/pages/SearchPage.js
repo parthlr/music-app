@@ -12,6 +12,8 @@ import Stack from '@mui/joy/Stack';
 import Avatar from '@mui/joy/Avatar';
 import Card from '@mui/joy/Card';
 import Link from '@mui/joy/Link';
+import Checkbox from '@mui/joy/Checkbox';
+import Done from '@mui/icons-material/Done';
 
 import SongCard from '../components/SongCard';
 import PlaylistCard from '../components/PlaylistCard';
@@ -20,7 +22,7 @@ import PlaylistsDialog from '../components/PlaylistsDialog';
 import LoadingOverlay from '../components/LoadingOverlay';
 
 function PlaylistResults(props) {
-    if (props.playlists.length > 0) {
+    if (props.playlists.length > 0 && props.filter) {
         return (
             <div>
                 <br />
@@ -47,9 +49,10 @@ function PlaylistResults(props) {
 }
 
 function SongResults(props) {
-    if (props.songs.length > 0) {
+    if (props.songs.length > 0 && props.filter) {
         return (
             <div>
+                <br />
                 <Typography sx={{ fontSize: 30, ml: "240px", pl: "50px" }}level="h1">Songs</Typography>
                 <br />
                 <List sx={{ pl: "50px", pr: "50px" }}>
@@ -85,9 +88,10 @@ function SongResults(props) {
 }
 
 function UserResults(props) {
-    if (props.users.length > 0) {
+    if (props.users.length > 0 && props.filter) {
         return (
             <div>
+                <br />
                 <Typography sx={{ fontSize: 30, ml: "240px", pl: "50px" }}level="h1">People</Typography>
                 <br />
                 <Box
@@ -145,6 +149,8 @@ export default function SearchPage(props) {
 
     const [openDialog, setOpenDialog] = useState(false);
     const [clickedSong, setClickedSong] = useState(null);
+
+    const [selectedValues, setValue] = useState(["Playlists", "Songs", "Users"]);
 
     const getPlaylistResults = async() => {
         if (props.query.length == 0) {
@@ -206,12 +212,66 @@ export default function SearchPage(props) {
         });
     }
 
+    const handleFilter = (e, item) => {
+        if (e.target.checked) {
+            setValue((val) => [...val, item]);
+        } else {
+            setValue((val) => val.filter((text) => text !== item));
+        }
+        console.log(selectedValues);
+    }
+
     return (
         <div className="search-page">
             <br /><br /><br /><br />
-            <PlaylistResults playlists={playlists} />
-            <SongResults songs={songs} setOpenDialog={setOpenDialog} setClickedSong={setClickedSong} />
-            <UserResults users={users} />
+            <List
+                orientation="horizontal"
+                wrap
+                sx={{
+                    '--List-gap': '8px',
+                    '--ListItem-radius': '20px',
+                    '--ListItem-minHeight': '32px',
+                     ml: "240px", pl: "50px"
+                }}
+            >
+                {
+                    ["Playlists", "Songs", "Users"].map(
+                        (item, index) => (
+                            <ListItem key={item}>
+                                {selectedValues.includes(item) && (
+                                    <Done
+                                        fontSize="md"
+                                        color="primary"
+                                        sx={{ ml: -0.5, mr: 0.5, zIndex: 2, pointerEvents: 'none' }}
+                                    />
+                                )}
+                                <Checkbox
+                                    size="sm"
+                                    disableIcon
+                                    overlay
+                                    label={item}
+                                    checked={selectedValues.includes(item)}
+                                    variant={'outlined'}
+                                    onChange={(e) => { handleFilter(e, item)}}
+                                    slotProps={{
+                                        action: ({ checked }) => ({
+                                            sx: checked
+                                                ? {
+                                                    border: '1px solid',
+                                                    borderColor: 'primary.500',
+                                                  }
+                                                : {},
+                                        }),
+                                    }}
+                                />
+                            </ListItem>
+                        )
+                    )
+                }
+            </List>
+            <PlaylistResults playlists={playlists} filter={selectedValues.includes("Playlists")}/>
+            <SongResults songs={songs} setOpenDialog={setOpenDialog} setClickedSong={setClickedSong} filter={selectedValues.includes("Songs")}/>
+            <UserResults users={users} filter={selectedValues.includes("Users")}/>
             <PlaylistsDialog open={openDialog} close={() => setOpenDialog(false)} song={clickedSong} />
             <LoadingOverlay open={openLoading} close={() => setOpenLoading(false)} />
         </div>
