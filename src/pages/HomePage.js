@@ -37,7 +37,7 @@ export default function HomePage() {
     const [people, setPeople] = useState([]);
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_user_playlists', {
+        Axios.post('http://localhost:5000/app/get_user_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.err) {
@@ -50,7 +50,7 @@ export default function HomePage() {
     }
 
     const getLikedPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_user_liked_playlists', {
+        Axios.post('http://localhost:5000/app/get_user_liked_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -63,7 +63,7 @@ export default function HomePage() {
     }
 
     const getRecommendedPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_recommended_playlists', {
+        Axios.post('http://localhost:5000/app/get_recommended_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -76,7 +76,7 @@ export default function HomePage() {
     }
 
     const getRandomSongs = async() => {
-        Axios.get('http://localhost:5000/get_songs'
+        Axios.get('http://localhost:5000/app/get_songs'
         ).then((response) => {
             if (!response.data.error) {
                 setSongs(response.data);
@@ -88,7 +88,7 @@ export default function HomePage() {
     }
 
     const getRandomPeople = async() => {
-        Axios.post('http://localhost:5000/get_home_page_people', {
+        Axios.post('http://localhost:5000/app/get_home_page_people', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {

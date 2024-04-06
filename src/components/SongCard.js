@@ -99,7 +99,7 @@ export default function SongCard(props) {
     }
 
     const deleteFromPlaylist = () => {
-        Axios.post('http://localhost:5000/delete_from_playlist', {
+        Axios.post('http://localhost:5000/app/delete_from_playlist', {
             songID: props.song.songID,
             playlistID: props.playlistID,
         }).then((response) => {
@@ -114,7 +114,7 @@ export default function SongCard(props) {
     }
 
     const isSongLiked = async() => {
-        Axios.post('http://localhost:5000/is_song_liked', {
+        Axios.post('http://localhost:5000/app/is_song_liked', {
             userID: localStorage.getItem("user"),
             songID: props.song.songID,
         }).then((response) => {
@@ -130,7 +130,7 @@ export default function SongCard(props) {
 
     const toggleLike = () => {
         if (!liked) {
-            Axios.post('http://localhost:5000/add_song_like', {
+            Axios.post('http://localhost:5000/app/add_song_like', {
                 userID: localStorage.getItem("user"),
                 songID: props.song.songID,
             }).then((response) => {
@@ -143,7 +143,7 @@ export default function SongCard(props) {
                 }
             });
         } else {
-            Axios.post('http://localhost:5000/delete_song_like', {
+            Axios.post('http://localhost:5000/app/delete_song_like', {
                 userID: localStorage.getItem("user"),
                 songID: props.song.songID,
             }).then((response) => {
@@ -194,28 +194,4 @@ export default function SongCard(props) {
             </ListItem>
         </div>
     );
-
-    /*
-    <Accordion>
-        <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-        >
-            <Typography>{props.song.title}</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-            <Typography>
-                Artist: {props.song.artist}
-            </Typography>
-            <Typography>
-                Released: {props.song.release_year}
-            </Typography>
-            <Typography>
-                Views: {props.song.song_views}
-            </Typography>
-        </AccordionDetails>
-    </Accordion>
-    */
-
 }

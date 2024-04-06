@@ -128,7 +128,7 @@ export default function PlaylistPage() {
     const navigate = useNavigate();
 
     const getPlaylist = async() => {
-        Axios.post('http://localhost:5000/playlist', {
+        Axios.post('http://localhost:5000/app/playlist', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -143,7 +143,7 @@ export default function PlaylistPage() {
     }
 
     const getSongsInPlaylist = async() => {
-        Axios.post('http://localhost:5000/get_songs_in_playlist', {
+        Axios.post('http://localhost:5000/app/get_songs_in_playlist', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -157,7 +157,7 @@ export default function PlaylistPage() {
     }
 
     const getPlaylistBackgroundImage = async() => {
-        Axios.post('http://localhost:5000/get_playlist_image', {
+        Axios.post('http://localhost:5000/app/get_playlist_image', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -175,7 +175,7 @@ export default function PlaylistPage() {
     }
 
     const getPlaylistCreator = async() => {
-        Axios.post('http://localhost:5000/get_playlist_creator', {
+        Axios.post('http://localhost:5000/app/get_playlist_creator', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -189,7 +189,7 @@ export default function PlaylistPage() {
     }
 
     const isPlaylistLiked = async() => {
-        Axios.post('http://localhost:5000/is_playlist_liked', {
+        Axios.post('http://localhost:5000/app/is_playlist_liked', {
             userID: localStorage.getItem("user"),
             playlistID: id,
         }).then((response) => {
@@ -205,7 +205,7 @@ export default function PlaylistPage() {
 
     const toggleLike = () => {
         if (!liked) {
-            Axios.post('http://localhost:5000/add_playlist_like', {
+            Axios.post('http://localhost:5000/app/add_playlist_like', {
                 userID: localStorage.getItem("user"),
                 playlistID: id,
             }).then((response) => {
@@ -218,7 +218,7 @@ export default function PlaylistPage() {
                 }
             });
         } else {
-            Axios.post('http://localhost:5000/delete_playlist_like', {
+            Axios.post('http://localhost:5000/app/delete_playlist_like', {
                 userID: localStorage.getItem("user"),
                 playlistID: id,
             }).then((response) => {
@@ -234,7 +234,7 @@ export default function PlaylistPage() {
     }
 
     const deletePlaylist = () => {
-        Axios.post('http://localhost:5000/delete_playlist', {
+        Axios.post('http://localhost:5000/app/delete_playlist', {
             playlistID: id,
         }).then((response) => {
             if (response.data.message) {

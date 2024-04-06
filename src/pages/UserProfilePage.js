@@ -76,7 +76,7 @@ export default function ProfilePage() {
     const [profileColor, setProfileColor] = useState("primary");
 
     const getProfileData = async() => {
-        Axios.post('http://localhost:5000/get_profile_data', {
+        Axios.post('http://localhost:5000/app/get_profile_data', {
             username: username,
         }).then((response) => {
             if (!response.data.error) {
@@ -93,7 +93,7 @@ export default function ProfilePage() {
     }
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_user_playlists', {
+        Axios.post('http://localhost:5000/app/get_user_playlists', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.err) {
@@ -106,7 +106,7 @@ export default function ProfilePage() {
     }
 
     const getLikedPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_user_liked_playlists', {
+        Axios.post('http://localhost:5000/app/get_user_liked_playlists', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
@@ -119,7 +119,7 @@ export default function ProfilePage() {
     }
 
     const getLikedSongs = async() => {
-        Axios.post('http://localhost:5000/get_liked_songs', {
+        Axios.post('http://localhost:5000/app/get_liked_songs', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
@@ -132,7 +132,7 @@ export default function ProfilePage() {
     }
 
     const isFriends = async() => {
-        Axios.post('http://localhost:5000/is_friends', {
+        Axios.post('http://localhost:5000/app/is_friends', {
             userID_1: profile.userID,
             userID_2: localStorage.getItem("user"),
         }).then((response) => {
@@ -146,7 +146,7 @@ export default function ProfilePage() {
     }
 
     const isFriendshipPending = async() => {
-        Axios.post('http://localhost:5000/is_friendship_pending', {
+        Axios.post('http://localhost:5000/app/is_friendship_pending', {
             to_userID: profile.userID,
             from_userID: localStorage.getItem("user"),
         }).then((response) => {
@@ -160,7 +160,7 @@ export default function ProfilePage() {
     }
 
     const getFriends = async() => {
-        Axios.post('http://localhost:5000/get_friends', {
+        Axios.post('http://localhost:5000/app/get_friends', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
@@ -173,7 +173,7 @@ export default function ProfilePage() {
     }
 
     const sendFriendRequest = () => {
-        Axios.post('http://localhost:5000/send_friend_request', {
+        Axios.post('http://localhost:5000/app/send_friend_request', {
             to_userID: profile.userID,
             from_userID: localStorage.getItem("user"),
         }).then((response) => {
@@ -187,7 +187,7 @@ export default function ProfilePage() {
     }
 
     const cancelFriendRequest = () => {
-        Axios.post('http://localhost:5000/cancel_friend_request', {
+        Axios.post('http://localhost:5000/app/cancel_friend_request', {
             to_userID: profile.userID,
             from_userID: localStorage.getItem("user"),
         }).then((response) => {
@@ -202,7 +202,7 @@ export default function ProfilePage() {
     }
 
     const removeFriend = () => {
-        Axios.post('http://localhost:5000/remove_friend', {
+        Axios.post('http://localhost:5000/app/remove_friend', {
             userID_1: profile.userID,
             userID_2: localStorage.getItem("user"),
         }).then((response) => {

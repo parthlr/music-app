@@ -69,7 +69,7 @@ export default function ProfilePage() {
     const maxAboutLength = 500;
 
     const getProfileData = async() => {
-        Axios.post('http://localhost:5000/get_profile_data', {
+        Axios.post('http://localhost:5000/app/get_profile_data', {
             userID: localStorage.getItem("user"),
         }).then((response) => {
             if (!response.data.error) {
@@ -86,7 +86,7 @@ export default function ProfilePage() {
     }
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_user_playlists', {
+        Axios.post('http://localhost:5000/app/get_user_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.err) {
@@ -99,7 +99,7 @@ export default function ProfilePage() {
     }
 
     const getLikedPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_user_liked_playlists', {
+        Axios.post('http://localhost:5000/app/get_user_liked_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -112,7 +112,7 @@ export default function ProfilePage() {
     }
 
     const getLikedSongs = async() => {
-        Axios.post('http://localhost:5000/get_liked_songs', {
+        Axios.post('http://localhost:5000/app/get_liked_songs', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -125,7 +125,7 @@ export default function ProfilePage() {
     }
 
     const getFriends = async() => {
-        Axios.post('http://localhost:5000/get_friends', {
+        Axios.post('http://localhost:5000/app/get_friends', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -141,7 +141,7 @@ export default function ProfilePage() {
         //var current_user = parseInt(localStorage.getItem("user"));
         //console.log(current_user);
 
-        Axios.post("http://localhost:5000/edit_profile", {
+        Axios.post("http://localhost:5000/app/edit_profile", {
             name: profileName,
             email: profileEmail,
             about: profileAbout,

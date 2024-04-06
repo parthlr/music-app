@@ -36,7 +36,7 @@ export default function PlaylistSettingsDialog(props) {
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const getBackgroundImages = async() => {
-        Axios.get('http://localhost:5000/get_background_images'
+        Axios.get('http://localhost:5000/app/get_background_images'
         ).then((response) => {
             if (!response.data.error) {
                 setImages(response.data);
@@ -60,7 +60,7 @@ export default function PlaylistSettingsDialog(props) {
     }
 
     const updatePlaylist = () => {
-        Axios.post('http://localhost:5000/update_playlist', {
+        Axios.post('http://localhost:5000/app/update_playlist', {
             playlistID: props.playlist.playlistID,
             name: name,
             imageID: selectedIndex + 1,

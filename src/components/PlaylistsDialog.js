@@ -26,7 +26,7 @@ export default function PlaylistsDialog(props) {
     const [playlists, setPlaylists] = useState([]);
 
     const getUserPlaylists = async() => {
-        Axios.post('http://localhost:5000/get_user_playlists', {
+        Axios.post('http://localhost:5000/app/get_user_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.err) {
@@ -39,7 +39,7 @@ export default function PlaylistsDialog(props) {
     }
 
     const addSongToPlaylist = (id) => {
-        Axios.post('http://localhost:5000/add_to_playlist', {
+        Axios.post('http://localhost:5000/app/add_to_playlist', {
             songID: props.song.songID,
             playlistID: id,
         }).then((response) => {

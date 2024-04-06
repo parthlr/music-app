@@ -27,7 +27,7 @@ export default function FriendRequestsDialog(props) {
     const [requests, setRequests] = useState([]);
 
     const getFriendRequests = async() => {
-        Axios.post('http://localhost:5000/get_friend_requests', {
+        Axios.post('http://localhost:5000/app/get_friend_requests', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -40,7 +40,7 @@ export default function FriendRequestsDialog(props) {
     }
 
     const acceptFriendRequest = (userID) => {
-        Axios.post('http://localhost:5000/accept_friend_request', {
+        Axios.post('http://localhost:5000/app/accept_friend_request', {
             to_userID: localStorage.getItem("user"),
             from_userID: userID,
         }).then((response) => {
@@ -53,7 +53,7 @@ export default function FriendRequestsDialog(props) {
     }
 
     const rejectFriendRequest = (userID) => {
-        Axios.post('http://localhost:5000/reject_friend_request', {
+        Axios.post('http://localhost:5000/app/reject_friend_request', {
             to_userID: localStorage.getItem("user"),
             from_userID: userID,
         }).then((response) => {
