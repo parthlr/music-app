@@ -75,7 +75,7 @@ function LoginButton(props) {
     };
 
     const getNumFriendRequests = async() => {
-        Axios.post('http://localhost:5000/app/get_num_friend_requests', {
+        Axios.post('http://localhost:5000/api/get_num_friend_requests', {
             userID: localStorage.getItem("user"),
         }).then((response) => {
             if (!response.data.error) {
@@ -146,7 +146,7 @@ function PlaylistIcon(props) {
     const [playlistImage, setPlaylistImage] = useState("");
 
     const getPlaylistBackgroundImage = async() => {
-        Axios.post('http://localhost:5000/app/get_playlist_image', {
+        Axios.post('http://localhost:5000/api/get_playlist_image', {
             playlistID: props.id,
         }).then((response) => {
             if (!response.data.error) {
@@ -176,7 +176,7 @@ function AccountPlaylists(props) {
     const [playlists, setPlaylists] = useState([]);
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/app/get_user_playlists', {
+        Axios.post('http://localhost:5000/api/get_user_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.err) {
@@ -226,7 +226,7 @@ function LikedPlaylists(props) {
     const [playlists, setPlaylists] = useState([]);
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/app/get_user_liked_playlists', {
+        Axios.post('http://localhost:5000/api/get_user_liked_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {

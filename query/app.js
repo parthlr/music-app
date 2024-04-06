@@ -38,7 +38,7 @@ connection.connect(function (err) {
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.post('/app/create_account', (req, res) => {
+app.post('/api/create_account', (req, res) => {
     const {username, email, name, password} = req.body;
 
     bcrypt.hash(password, salt, (err, hash) => {
@@ -64,7 +64,7 @@ app.post('/app/create_account', (req, res) => {
     });
 });
 
-app.post('/app/check_account_exists', (req, res) => {
+app.post('/api/check_account_exists', (req, res) => {
     const {username, email} = req.body;
     connection.query(
         'SELECT userID FROM Users WHERE username = ? OR email = ?',
@@ -86,7 +86,7 @@ app.post('/app/check_account_exists', (req, res) => {
     );
 });
 
-app.post('/app/login', (req, res) => {
+app.post('/api/login', (req, res) => {
     const {username, password} = req.body;
 
     connection.query(
@@ -116,7 +116,7 @@ app.post('/app/login', (req, res) => {
     );
 })
 
-app.post('/app/create_playlist', (req, res) => {
+app.post('/api/create_playlist', (req, res) => {
     const {name, userID} = req.body;
 
     connection.query(
@@ -133,7 +133,7 @@ app.post('/app/create_playlist', (req, res) => {
     );
 });
 
-app.post('/app/delete_playlist', (req, res) => {
+app.post('/api/delete_playlist', (req, res) => {
     const {playlistID} = req.body;
     connection.query(
         'CALL delete_playlist(?)',
@@ -150,7 +150,7 @@ app.post('/app/delete_playlist', (req, res) => {
     );
 });
 
-app.post('/app/edit_profile', (req, res) => {
+app.post('/api/edit_profile', (req, res) => {
     const {name, email, about, profile_color, userID} = req.body;
 
     connection.query(
@@ -166,7 +166,7 @@ app.post('/app/edit_profile', (req, res) => {
     );
 });
 
-app.get('/app/users', (req, res) => {
+app.get('/api/users', (req, res) => {
     connection.query('SELECT * FROM Users',
       (err,rows) => {
         if(!err) {
@@ -179,7 +179,7 @@ app.get('/app/users', (req, res) => {
     });
 });
 
-app.post('/app/playlist', (req, res) => {
+app.post('/api/playlist', (req, res) => {
     const {playlistID} = req.body;
     connection.query(
         'SELECT * FROM Playlists WHERE playlistID = ?',
@@ -202,7 +202,7 @@ app.post('/app/playlist', (req, res) => {
     );
 })
 
-app.post('/app/get_profile_data', (req, res) => {
+app.post('/api/get_profile_data', (req, res) => {
     const {userID, username} = req.body;
     connection.query(
         'SELECT userID, username, name, email, about, profile_color FROM Users WHERE userID = ? OR username = ?',
@@ -225,7 +225,7 @@ app.post('/app/get_profile_data', (req, res) => {
     );
 });
 
-app.post('/app/get_user_playlists', (req, res) => {
+app.post('/api/get_user_playlists', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT * FROM Playlists WHERE playlistID IN (SELECT playlistID FROM creates WHERE userID = ?)',
@@ -243,7 +243,7 @@ app.post('/app/get_user_playlists', (req, res) => {
     );
 });
 
-app.post('/app/get_user_liked_playlists', (req, res) => {
+app.post('/api/get_user_liked_playlists', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT * FROM Playlists WHERE playlistID IN (SELECT playlistID FROM creates WHERE userID != ? AND playlistID IN (SELECT playlistID FROM playlist_likes WHERE userID = ?))',
@@ -261,7 +261,7 @@ app.post('/app/get_user_liked_playlists', (req, res) => {
     );
 });
 
-app.post('/app/add_to_playlist', (req, res) => {
+app.post('/api/add_to_playlist', (req, res) => {
     const {songID, playlistID} = req.body;
     connection.query(
         'INSERT INTO songPlaylist (songID, playlistID) VALUES (?,?)',
@@ -278,7 +278,7 @@ app.post('/app/add_to_playlist', (req, res) => {
     );
 });
 
-app.post('/app/delete_from_playlist', (req, res) => {
+app.post('/api/delete_from_playlist', (req, res) => {
     const {songID, playlistID} = req.body;
     connection.query(
         'DELETE FROM songPlaylist WHERE songID = ? AND playlistID = ?',
@@ -295,7 +295,7 @@ app.post('/app/delete_from_playlist', (req, res) => {
     );
 });
 
-app.post('/app/get_songs_in_playlist', (req, res) => {
+app.post('/api/get_songs_in_playlist', (req, res) => {
     const {playlistID} = req.body;
     connection.query(
         'SELECT * FROM Songs WHERE songID IN (SELECT songID FROM songPlaylist WHERE playlistID = ?)',
@@ -312,7 +312,7 @@ app.post('/app/get_songs_in_playlist', (req, res) => {
     );
 });
 
-app.post('/app/get_playlist_creator', (req, res) => {
+app.post('/api/get_playlist_creator', (req, res) => {
     const {playlistID} = req.body;
     connection.query(
         'SELECT * FROM Users WHERE userID IN (SELECT userID FROM creates WHERE playlistID = ?)',
@@ -329,7 +329,7 @@ app.post('/app/get_playlist_creator', (req, res) => {
     );
 });
 
-app.post('/app/get_playlist_image', (req, res) => {
+app.post('/api/get_playlist_image', (req, res) => {
     const {playlistID} = req.body;
     connection.query(
         'SELECT * FROM background_images WHERE id IN (SELECT backgroundImageID FROM Playlists WHERE playlistID = ?)',
@@ -346,7 +346,7 @@ app.post('/app/get_playlist_image', (req, res) => {
     );
 });
 
-app.post('/app/update_playlist', (req, res) => {
+app.post('/api/update_playlist', (req, res) => {
     const {playlistID, name, imageID, isPrivate} = req.body;
     connection.query(
         'UPDATE Playlists SET name = ?, backgroundImageID = ?, private = ? WHERE playlistID = ?',
@@ -363,7 +363,7 @@ app.post('/app/update_playlist', (req, res) => {
     );
 })
 
-app.post('/app/is_playlist_liked', (req, res) => {
+app.post('/api/is_playlist_liked', (req, res) => {
     const {userID, playlistID} = req.body;
     connection.query(
         'SELECT * FROM playlist_likes WHERE userID = ? AND playlistID = ?',
@@ -385,7 +385,7 @@ app.post('/app/is_playlist_liked', (req, res) => {
     );
 });
 
-app.post('/app/add_playlist_like', (req, res) => {
+app.post('/api/add_playlist_like', (req, res) => {
     const {userID, playlistID} = req.body;
     connection.query(
         'INSERT INTO playlist_likes (userID, playlistID) VALUES (?,?)',
@@ -402,7 +402,7 @@ app.post('/app/add_playlist_like', (req, res) => {
     );
 });
 
-app.post('/app/delete_playlist_like', (req, res) => {
+app.post('/api/delete_playlist_like', (req, res) => {
     const {userID, playlistID} = req.body;
     connection.query(
         'DELETE FROM playlist_likes WHERE userID = ? AND playlistID = ?',
@@ -419,7 +419,7 @@ app.post('/app/delete_playlist_like', (req, res) => {
     );
 });
 
-app.post('/app/is_song_liked', (req, res) => {
+app.post('/api/is_song_liked', (req, res) => {
     const {userID, songID} = req.body;
     connection.query(
         'SELECT * FROM song_likes WHERE userID = ? AND songID = ?',
@@ -441,7 +441,7 @@ app.post('/app/is_song_liked', (req, res) => {
     );
 });
 
-app.post('/app/add_song_like', (req, res) => {
+app.post('/api/add_song_like', (req, res) => {
     const {userID, songID} = req.body;
     connection.query(
         'INSERT INTO song_likes (userID, songID) VALUES (?,?)',
@@ -458,7 +458,7 @@ app.post('/app/add_song_like', (req, res) => {
     );
 });
 
-app.post('/app/delete_song_like', (req, res) => {
+app.post('/api/delete_song_like', (req, res) => {
     const {userID, songID} = req.body;
     connection.query(
         'DELETE FROM song_likes WHERE userID = ? AND songID = ?',
@@ -475,7 +475,7 @@ app.post('/app/delete_song_like', (req, res) => {
     );
 });
 
-app.post('/app/get_liked_songs', (req, res) => {
+app.post('/api/get_liked_songs', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT * FROM Songs WHERE songID IN (SELECT songID FROM song_likes WHERE userID = ?)',
@@ -493,7 +493,7 @@ app.post('/app/get_liked_songs', (req, res) => {
     )
 });
 
-app.get('/app/get_background_images', (req, res) => {
+app.get('/api/get_background_images', (req, res) => {
     connection.query(
         'SELECT * FROM background_images',
         (err, rows) => {
@@ -508,7 +508,7 @@ app.get('/app/get_background_images', (req, res) => {
     )
 });
 
-app.post('/app/get_home_page_playlists', (req, res) => {
+app.post('/api/get_home_page_playlists', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT * FROM Playlists WHERE playlistID IN (SELECT playlistID FROM creates WHERE userID = ?) ORDER BY RAND() LIMIT 4',
@@ -524,7 +524,7 @@ app.post('/app/get_home_page_playlists', (req, res) => {
     );
 });
 
-app.post('/app/get_recommended_playlists', (req, res) => {
+app.post('/api/get_recommended_playlists', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT * FROM Playlists WHERE playlistID NOT IN (SELECT playlistID FROM creates WHERE userID = ?) AND playlistID NOT IN (SELECT playlistID FROM playlist_likes WHERE userID = ?) ORDER BY RAND() LIMIT 2',
@@ -542,7 +542,7 @@ app.post('/app/get_recommended_playlists', (req, res) => {
     );
 });
 
-app.post('/app/get_home_page_liked_playlists', (req, res) => {
+app.post('/api/get_home_page_liked_playlists', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT * FROM Playlists WHERE playlistID IN (SELECT playlistID FROM creates WHERE userID != ? AND playlistID IN (SELECT playlistID FROM playlist_likes WHERE userID = ?)) ORDER BY RAND() LIMIT 4',
@@ -560,7 +560,7 @@ app.post('/app/get_home_page_liked_playlists', (req, res) => {
     );
 });
 
-app.get('/app/get_songs', (req, res) => {
+app.get('/api/get_songs', (req, res) => {
     connection.query('SELECT * FROM Songs ORDER BY RAND() LIMIT 5',
         (err, rows) => {
             if (!err) {
@@ -574,7 +574,7 @@ app.get('/app/get_songs', (req, res) => {
     );
 });
 
-app.post('/app/get_home_page_people', (req, res) => {
+app.post('/api/get_home_page_people', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT * FROM Users WHERE userID != ? ORDER BY RAND() LIMIT 3',
@@ -591,7 +591,7 @@ app.post('/app/get_home_page_people', (req, res) => {
     );
 });
 
-app.post('/app/search_playlists', (req, res) => {
+app.post('/api/search_playlists', (req, res) => {
     const {search} = req.body;
     connection.query(
         "SELECT * FROM Playlists WHERE INSTR(name, ?) > 0 LIMIT 20",
@@ -613,7 +613,7 @@ app.post('/app/search_playlists', (req, res) => {
     );
 });
 
-app.post('/app/search_songs', (req, res) => {
+app.post('/api/search_songs', (req, res) => {
     const {search} = req.body;
     connection.query(
         "SELECT * FROM Songs WHERE INSTR(title, ?) > 0 OR INSTR(artist, ?) > 0 LIMIT 30",
@@ -635,7 +635,7 @@ app.post('/app/search_songs', (req, res) => {
     );
 });
 
-app.post('/app/search_users', (req, res) => {
+app.post('/api/search_users', (req, res) => {
     const {search} = req.body;
     connection.query(
         "SELECT * FROM Users WHERE INSTR(username, ?) > 0 OR INSTR(name, ?) > 0 OR INSTR(email, ?) > 0 LIMIT 30",
@@ -657,7 +657,7 @@ app.post('/app/search_users', (req, res) => {
     );
 });
 
-app.post('/app/is_friends', (req, res) => {
+app.post('/api/is_friends', (req, res) => {
     const {userID_1, userID_2} = req.body;
     connection.query(
         'SELECT * FROM friends WHERE userID_1 = ? AND userID_2 = ?',
@@ -679,7 +679,7 @@ app.post('/app/is_friends', (req, res) => {
     )
 });
 
-app.post('/app/is_friendship_pending', (req, res) => {
+app.post('/api/is_friendship_pending', (req, res) => {
     const {to_userID, from_userID} = req.body;
     connection.query(
         'SELECT * FROM friend_requests WHERE to_userID = ? AND from_userID = ?',
@@ -701,7 +701,7 @@ app.post('/app/is_friendship_pending', (req, res) => {
     );
 });
 
-app.post('/app/get_friends', (req, res) => {
+app.post('/api/get_friends', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT userID, username, name, email, about, profile_color FROM Users WHERE userID IN (SELECT userID_2 FROM friends WHERE userID_1 = ?) LIMIT 5',
@@ -718,7 +718,7 @@ app.post('/app/get_friends', (req, res) => {
     )
 });
 
-app.post('/app/send_friend_request', (req, res) => {
+app.post('/api/send_friend_request', (req, res) => {
     const {to_userID, from_userID} = req.body;
     connection.query(
         'INSERT INTO friend_requests (to_userID , from_userID) VALUES (?,?)',
@@ -735,7 +735,7 @@ app.post('/app/send_friend_request', (req, res) => {
     );
 });
 
-app.post('/app/cancel_friend_request', (req, res) => {
+app.post('/api/cancel_friend_request', (req, res) => {
     const {to_userID, from_userID} = req.body;
     connection.query(
         'DELETE FROM friend_requests WHERE to_userID = ? AND from_userID = ?',
@@ -751,7 +751,7 @@ app.post('/app/cancel_friend_request', (req, res) => {
     )
 });
 
-app.post('/app/get_num_friend_requests', (req, res) => {
+app.post('/api/get_num_friend_requests', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT COUNT(to_userID) AS count FROM friend_requests WHERE to_userID = ?',
@@ -768,7 +768,7 @@ app.post('/app/get_num_friend_requests', (req, res) => {
     );
 });
 
-app.post('/app/get_friend_requests', (req, res) => {
+app.post('/api/get_friend_requests', (req, res) => {
     const {userID} = req.body;
     connection.query(
         'SELECT userID, username, name, email, about, profile_color FROM Users WHERE userID IN (SELECT from_userID FROM friend_requests WHERE to_userID = ?)',
@@ -785,7 +785,7 @@ app.post('/app/get_friend_requests', (req, res) => {
     );
 });
 
-app.post('/app/accept_friend_request', (req, res) => {
+app.post('/api/accept_friend_request', (req, res) => {
     const {to_userID, from_userID} = req.body;
     connection.query(
         'CALL accept_friend_request(?,?)',
@@ -801,7 +801,7 @@ app.post('/app/accept_friend_request', (req, res) => {
     );
 });
 
-app.post('/app/reject_friend_request', (req, res) => {
+app.post('/api/reject_friend_request', (req, res) => {
     const {to_userID, from_userID} = req.body;
     connection.query(
         'DELETE FROM friend_requests WHERE to_userID = ? AND from_userID = ?',
@@ -817,7 +817,7 @@ app.post('/app/reject_friend_request', (req, res) => {
     )
 });
 
-app.post('/app/remove_friend', (req, res) => {
+app.post('/api/remove_friend', (req, res) => {
     const {userID_1, userID_2} = req.body;
     connection.query(
         'CALL remove_friend(?,?)',

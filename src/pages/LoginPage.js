@@ -25,7 +25,7 @@ export default function LoginPage() {
     const login = (event) => {
         event.preventDefault();
         //alert("Email: " + email + " Password: " + password);
-        Axios.post("http://localhost:5000/app/login", {
+        Axios.post("http://localhost:5000/api/login", {
             username: username_r,
             password: password_r,
         }).then((response) => {

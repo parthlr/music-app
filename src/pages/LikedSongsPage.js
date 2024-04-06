@@ -35,7 +35,7 @@ export default function LikedSongsPage() {
     const [clickedSong, setClickedSong] = useState(null);
 
     const getLikedSongs = async() => {
-        Axios.post('http://localhost:5000/app/get_liked_songs', {
+        Axios.post('http://localhost:5000/api/get_liked_songs', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {

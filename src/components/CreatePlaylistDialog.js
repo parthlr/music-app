@@ -16,7 +16,7 @@ export default function CreatePlaylistDialog(props) {
         //var current_user = parseInt(localStorage.getItem("user"));
         //console.log(current_user);
 
-        Axios.post("http://localhost:5000/app/create_playlist", {
+        Axios.post("http://localhost:5000/api/create_playlist", {
             name: playlistName,
             userID: localStorage.getItem("user"),
         }).then((response) => {

@@ -36,7 +36,7 @@ export default function CreateAccountPage() {
 
         let accountExists = false;
 
-        Axios.post("http://localhost:5000/app/check_account_exists", {
+        Axios.post("http://localhost:5000/api/check_account_exists", {
             username: username_r,
             email: email_r,
         }).then((response) => {
@@ -46,7 +46,7 @@ export default function CreateAccountPage() {
                 accountExists = true;
                 console.log("EXISTS: " + accountExists);
             } else if (response.data.exists == 0){
-                return Axios.post("http://localhost:5000/app/create_account", {
+                return Axios.post("http://localhost:5000/api/create_account", {
                     username: username_r,
                     email: email_r,
                     name: name_r,

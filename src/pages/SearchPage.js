@@ -157,7 +157,7 @@ export default function SearchPage(props) {
             setPlaylists([]);
             return;
         }
-        Axios.post('http://localhost:5000/app/search_playlists', {
+        Axios.post('http://localhost:5000/api/search_playlists', {
             search: props.query,
         }).then((response) => {
             if (response.data.error) {
@@ -177,7 +177,7 @@ export default function SearchPage(props) {
             setSongs([]);
             return;
         }
-        Axios.post('http://localhost:5000/app/search_songs', {
+        Axios.post('http://localhost:5000/api/search_songs', {
             search: props.query,
         }).then((response) => {
             if (response.data.error) {
@@ -197,7 +197,7 @@ export default function SearchPage(props) {
             setUsers([]);
             return;
         }
-        Axios.post('http://localhost:5000/app/search_users', {
+        Axios.post('http://localhost:5000/api/search_users', {
             search: props.query,
         }).then((response) => {
             if (response.data.error) {
