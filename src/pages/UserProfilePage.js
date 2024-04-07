@@ -27,7 +27,9 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PlaylistCard from '../components/PlaylistCard';
 import SongCard from '../components/SongCard';
 import UserCard from '../components/UserCard';
-import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
+import CreatePlaylistDialog from '../components/CreatePlaylistDialog';
+
+import config from '../services/config';
 
 export default function ProfilePage() {
 
@@ -76,7 +78,7 @@ export default function ProfilePage() {
     const [profileColor, setProfileColor] = useState("primary");
 
     const getProfileData = async() => {
-        Axios.post('http://localhost:5000/api/get_profile_data', {
+        Axios.post(config.api + '/get_profile_data', {
             username: username,
         }).then((response) => {
             if (!response.data.error) {
@@ -93,7 +95,7 @@ export default function ProfilePage() {
     }
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_user_playlists', {
+        Axios.post(config.api + '/get_user_playlists', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.err) {
@@ -106,7 +108,7 @@ export default function ProfilePage() {
     }
 
     const getLikedPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_user_liked_playlists', {
+        Axios.post(config.api + '/get_user_liked_playlists', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
@@ -119,7 +121,7 @@ export default function ProfilePage() {
     }
 
     const getLikedSongs = async() => {
-        Axios.post('http://localhost:5000/api/get_liked_songs', {
+        Axios.post(config.api + '/get_liked_songs', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
@@ -132,7 +134,7 @@ export default function ProfilePage() {
     }
 
     const isFriends = async() => {
-        Axios.post('http://localhost:5000/api/is_friends', {
+        Axios.post(config.api + '/is_friends', {
             userID_1: profile.userID,
             userID_2: localStorage.getItem("user"),
         }).then((response) => {
@@ -146,7 +148,7 @@ export default function ProfilePage() {
     }
 
     const isFriendshipPending = async() => {
-        Axios.post('http://localhost:5000/api/is_friendship_pending', {
+        Axios.post(config.api + '/is_friendship_pending', {
             to_userID: profile.userID,
             from_userID: localStorage.getItem("user"),
         }).then((response) => {
@@ -160,7 +162,7 @@ export default function ProfilePage() {
     }
 
     const getFriends = async() => {
-        Axios.post('http://localhost:5000/api/get_friends', {
+        Axios.post(config.api + '/get_friends', {
             userID: profile.userID,
         }).then((response) => {
             if (!response.data.error) {
@@ -173,7 +175,7 @@ export default function ProfilePage() {
     }
 
     const sendFriendRequest = () => {
-        Axios.post('http://localhost:5000/api/send_friend_request', {
+        Axios.post(config.api + '/send_friend_request', {
             to_userID: profile.userID,
             from_userID: localStorage.getItem("user"),
         }).then((response) => {
@@ -187,7 +189,7 @@ export default function ProfilePage() {
     }
 
     const cancelFriendRequest = () => {
-        Axios.post('http://localhost:5000/api/cancel_friend_request', {
+        Axios.post(config.api + '/cancel_friend_request', {
             to_userID: profile.userID,
             from_userID: localStorage.getItem("user"),
         }).then((response) => {
@@ -202,7 +204,7 @@ export default function ProfilePage() {
     }
 
     const removeFriend = () => {
-        Axios.post('http://localhost:5000/api/remove_friend', {
+        Axios.post(config.api + '/remove_friend', {
             userID_1: profile.userID,
             userID_2: localStorage.getItem("user"),
         }).then((response) => {

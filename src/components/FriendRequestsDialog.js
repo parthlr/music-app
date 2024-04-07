@@ -18,6 +18,8 @@ import IconButton from '@mui/material/IconButton';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
+import config from '../services/config';
+
 export default function FriendRequestsDialog(props) {
 
     useEffect((e) => {
@@ -27,7 +29,7 @@ export default function FriendRequestsDialog(props) {
     const [requests, setRequests] = useState([]);
 
     const getFriendRequests = async() => {
-        Axios.post('http://localhost:5000/api/get_friend_requests', {
+        Axios.post(config.api + '/get_friend_requests', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -40,7 +42,7 @@ export default function FriendRequestsDialog(props) {
     }
 
     const acceptFriendRequest = (userID) => {
-        Axios.post('http://localhost:5000/api/accept_friend_request', {
+        Axios.post(config.api + '/accept_friend_request', {
             to_userID: localStorage.getItem("user"),
             from_userID: userID,
         }).then((response) => {
@@ -53,7 +55,7 @@ export default function FriendRequestsDialog(props) {
     }
 
     const rejectFriendRequest = (userID) => {
-        Axios.post('http://localhost:5000/api/reject_friend_request', {
+        Axios.post(config.api + '/reject_friend_request', {
             to_userID: localStorage.getItem("user"),
             from_userID: userID,
         }).then((response) => {

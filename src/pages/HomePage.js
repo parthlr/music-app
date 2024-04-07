@@ -16,6 +16,8 @@ import PlaylistCard from '../components/PlaylistCard';
 import UserCard from '../components/UserCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 
+import config from '../services/config';
+
 export default function HomePage() {
 
     useEffect(() => {
@@ -37,7 +39,7 @@ export default function HomePage() {
     const [people, setPeople] = useState([]);
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_user_playlists', {
+        Axios.post(config.api + '/get_user_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.err) {
@@ -50,7 +52,7 @@ export default function HomePage() {
     }
 
     const getLikedPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_user_liked_playlists', {
+        Axios.post(config.api + '/get_user_liked_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -63,7 +65,7 @@ export default function HomePage() {
     }
 
     const getRecommendedPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_recommended_playlists', {
+        Axios.post(config.api + '/get_recommended_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -76,7 +78,7 @@ export default function HomePage() {
     }
 
     const getRandomSongs = async() => {
-        Axios.get('http://localhost:5000/api/get_songs'
+        Axios.get(config.api + '/get_songs'
         ).then((response) => {
             if (!response.data.error) {
                 setSongs(response.data);
@@ -88,7 +90,7 @@ export default function HomePage() {
     }
 
     const getRandomPeople = async() => {
-        Axios.post('http://localhost:5000/api/get_home_page_people', {
+        Axios.post(config.api + '/get_home_page_people', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {

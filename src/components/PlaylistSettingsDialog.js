@@ -19,6 +19,8 @@ import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Grid from '@mui/joy/Grid';
 
+import config from '../services/config';
+
 export default function PlaylistSettingsDialog(props) {
 
     const [p_private, setPrivate] = useState(false);
@@ -36,7 +38,7 @@ export default function PlaylistSettingsDialog(props) {
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     const getBackgroundImages = async() => {
-        Axios.get('http://localhost:5000/api/get_background_images'
+        Axios.get(config.api + '/get_background_images'
         ).then((response) => {
             if (!response.data.error) {
                 setImages(response.data);
@@ -60,7 +62,7 @@ export default function PlaylistSettingsDialog(props) {
     }
 
     const updatePlaylist = () => {
-        Axios.post('http://localhost:5000/api/update_playlist', {
+        Axios.post(config.api + '/update_playlist', {
             playlistID: props.playlist.playlistID,
             name: name,
             imageID: selectedIndex + 1,

@@ -15,6 +15,8 @@ import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 
+import config from '../services/config';
+
 export default function PlaylistsDialog(props) {
 
     useEffect(() => {
@@ -26,7 +28,7 @@ export default function PlaylistsDialog(props) {
     const [playlists, setPlaylists] = useState([]);
 
     const getUserPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_user_playlists', {
+        Axios.post(config.api + '/get_user_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.err) {
@@ -39,7 +41,7 @@ export default function PlaylistsDialog(props) {
     }
 
     const addSongToPlaylist = (id) => {
-        Axios.post('http://localhost:5000/api/add_to_playlist', {
+        Axios.post(config.api + '/add_to_playlist', {
             songID: props.song.songID,
             playlistID: id,
         }).then((response) => {

@@ -21,6 +21,8 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import SongCard from '../components/SongCard';
 import PlaylistsDialog from '../components/PlaylistsDialog';
 
+import config from '../services/config';
+
 export default function LikedSongsPage() {
 
     // https://i.pinimg.com/236x/c3/f0/56/c3f056a65b92710f3701813a151f7524.jpg
@@ -35,7 +37,7 @@ export default function LikedSongsPage() {
     const [clickedSong, setClickedSong] = useState(null);
 
     const getLikedSongs = async() => {
-        Axios.post('http://localhost:5000/api/get_liked_songs', {
+        Axios.post(config.api + '/get_liked_songs', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {

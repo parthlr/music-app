@@ -11,6 +11,8 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 
+import config from '../services/config';
+
 export default function LoginPage() {
 
     const [username_r, setUsername] = useState("");
@@ -25,7 +27,7 @@ export default function LoginPage() {
     const login = (event) => {
         event.preventDefault();
         //alert("Email: " + email + " Password: " + password);
-        Axios.post("http://localhost:5000/api/login", {
+        Axios.post(config.api + "/login", {
             username: username_r,
             password: password_r,
         }).then((response) => {

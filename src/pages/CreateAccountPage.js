@@ -11,6 +11,8 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 
+import config from '../services/config';
+
 export default function CreateAccountPage() {
 
     const [username_r, setUsername] = useState("");
@@ -36,7 +38,7 @@ export default function CreateAccountPage() {
 
         let accountExists = false;
 
-        Axios.post("http://localhost:5000/api/check_account_exists", {
+        Axios.post(config.api + "/check_account_exists", {
             username: username_r,
             email: email_r,
         }).then((response) => {
@@ -46,7 +48,7 @@ export default function CreateAccountPage() {
                 accountExists = true;
                 console.log("EXISTS: " + accountExists);
             } else if (response.data.exists == 0){
-                return Axios.post("http://localhost:5000/api/create_account", {
+                return Axios.post(config.api + "/create_account", {
                     username: username_r,
                     email: email_r,
                     name: name_r,

@@ -31,6 +31,8 @@ import ShareDialog from '../components/ShareDialog';
 import PlaylistSettingsDialog from '../components/PlaylistSettingsDialog';
 import ConfirmationDialog from '../components/ConfirmationDialog';
 
+import config from '../services/config';
+
 function PlaylistMenu(props) {
     if (props.userID == parseInt(localStorage.getItem("user"))) {
         return (
@@ -128,7 +130,7 @@ export default function PlaylistPage() {
     const navigate = useNavigate();
 
     const getPlaylist = async() => {
-        Axios.post('http://localhost:5000/api/playlist', {
+        Axios.post(config.api + '/playlist', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -143,7 +145,7 @@ export default function PlaylistPage() {
     }
 
     const getSongsInPlaylist = async() => {
-        Axios.post('http://localhost:5000/api/get_songs_in_playlist', {
+        Axios.post(config.api + '/get_songs_in_playlist', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -157,7 +159,7 @@ export default function PlaylistPage() {
     }
 
     const getPlaylistBackgroundImage = async() => {
-        Axios.post('http://localhost:5000/api/get_playlist_image', {
+        Axios.post(config.api + '/get_playlist_image', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -175,7 +177,7 @@ export default function PlaylistPage() {
     }
 
     const getPlaylistCreator = async() => {
-        Axios.post('http://localhost:5000/api/get_playlist_creator', {
+        Axios.post(config.api + '/get_playlist_creator', {
             playlistID: id,
         }).then((response) => {
             if (!response.data.error) {
@@ -189,7 +191,7 @@ export default function PlaylistPage() {
     }
 
     const isPlaylistLiked = async() => {
-        Axios.post('http://localhost:5000/api/is_playlist_liked', {
+        Axios.post(config.api + '/is_playlist_liked', {
             userID: localStorage.getItem("user"),
             playlistID: id,
         }).then((response) => {
@@ -205,7 +207,7 @@ export default function PlaylistPage() {
 
     const toggleLike = () => {
         if (!liked) {
-            Axios.post('http://localhost:5000/api/add_playlist_like', {
+            Axios.post(config.api + '/add_playlist_like', {
                 userID: localStorage.getItem("user"),
                 playlistID: id,
             }).then((response) => {
@@ -218,7 +220,7 @@ export default function PlaylistPage() {
                 }
             });
         } else {
-            Axios.post('http://localhost:5000/api/delete_playlist_like', {
+            Axios.post(config.api + '/delete_playlist_like', {
                 userID: localStorage.getItem("user"),
                 playlistID: id,
             }).then((response) => {
@@ -234,7 +236,7 @@ export default function PlaylistPage() {
     }
 
     const deletePlaylist = () => {
-        Axios.post('http://localhost:5000/api/delete_playlist', {
+        Axios.post(config.api + '/delete_playlist', {
             playlistID: id,
         }).then((response) => {
             if (response.data.message) {
@@ -318,7 +320,7 @@ export default function PlaylistPage() {
             </List>
             <PlaylistsDialog open={openPlaylistsDialog} close={() => setOpenPlaylistsDialog(false)} song={clickedSong} />
             <PlaylistMenu userID={playlistCreator.userID} open={optionsOpen} anchorEl={anchorEl} close={handleOptionsClose} share={() => setOpenShareDialog(true)} confirm={() => setOpenConfirmationDialog(true)} />
-            <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={"http://localhost:3000/playlist/" + id} />
+            <ShareDialog open={openShareDialog} close={() => setOpenShareDialog(false)} title="Share Playlist" link={config.url + "/playlist/" + id} />
             <PlaylistSettingsDialog playlist={playlist} open={openSettingsDialog} close={() => setOpenSettingsDialog(false)} imageID={playlistImageID} updateImage={setPlaylistImageID} />
             <ConfirmationDialog open={openConfirmationDialog} close={() => setOpenConfirmationDialog(false)} description="Are you sure you want to delete this playlist?" confirm={deletePlaylist} />
         </div>

@@ -12,6 +12,8 @@ import AspectRatio from '@mui/joy/AspectRatio';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { pink } from '@mui/material/colors';
 
+import config from '../services/config';
+
 function LikedIcon(props) {
     if (props.liked) {
         return (
@@ -51,7 +53,7 @@ export default function PlaylistCard(props) {
     const [creator, setCreator] = useState([]);
 
     const getPlaylistBackgroundImage = async() => {
-        Axios.post('http://localhost:5000/api/get_playlist_image', {
+        Axios.post(config.api + '/get_playlist_image', {
             playlistID: props.playlist.playlistID,
         }).then((response) => {
             if (!response.data.error) {
@@ -68,7 +70,7 @@ export default function PlaylistCard(props) {
     }
 
     const isPlaylistLiked = async() => {
-        Axios.post('http://localhost:5000/api/is_playlist_liked', {
+        Axios.post(config.api + '/is_playlist_liked', {
             userID: localStorage.getItem("user"),
             playlistID: props.playlist.playlistID,
         }).then((response) => {
@@ -83,7 +85,7 @@ export default function PlaylistCard(props) {
     }
 
     const getPlaylistCreator = async() => {
-        Axios.post('http://localhost:5000/api/get_playlist_creator', {
+        Axios.post(config.api + '/get_playlist_creator', {
             playlistID: props.playlist.playlistID,
         }).then((response) => {
             if (!response.data.error) {

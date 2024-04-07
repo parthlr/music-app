@@ -30,7 +30,9 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PlaylistCard from '../components/PlaylistCard';
 import SongCard from '../components/SongCard';
 import UserCard from '../components/UserCard';
-import CreatePlaylistDialog from '../components/CreatePlaylistDialog'
+import CreatePlaylistDialog from '../components/CreatePlaylistDialog';
+
+import config from '../services/config';
 
 export default function ProfilePage() {
 
@@ -69,7 +71,7 @@ export default function ProfilePage() {
     const maxAboutLength = 500;
 
     const getProfileData = async() => {
-        Axios.post('http://localhost:5000/api/get_profile_data', {
+        Axios.post(config.api + '/get_profile_data', {
             userID: localStorage.getItem("user"),
         }).then((response) => {
             if (!response.data.error) {
@@ -86,7 +88,7 @@ export default function ProfilePage() {
     }
 
     const getPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_user_playlists', {
+        Axios.post(config.api + '/get_user_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.err) {
@@ -99,7 +101,7 @@ export default function ProfilePage() {
     }
 
     const getLikedPlaylists = async() => {
-        Axios.post('http://localhost:5000/api/get_user_liked_playlists', {
+        Axios.post(config.api + '/get_user_liked_playlists', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -112,7 +114,7 @@ export default function ProfilePage() {
     }
 
     const getLikedSongs = async() => {
-        Axios.post('http://localhost:5000/api/get_liked_songs', {
+        Axios.post(config.api + '/get_liked_songs', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -125,7 +127,7 @@ export default function ProfilePage() {
     }
 
     const getFriends = async() => {
-        Axios.post('http://localhost:5000/api/get_friends', {
+        Axios.post(config.api + '/get_friends', {
             userID: localStorage.getItem("user")
         }).then((response) => {
             if (!response.data.error) {
@@ -141,7 +143,7 @@ export default function ProfilePage() {
         //var current_user = parseInt(localStorage.getItem("user"));
         //console.log(current_user);
 
-        Axios.post("http://localhost:5000/api/edit_profile", {
+        Axios.post(config.api + "/edit_profile", {
             name: profileName,
             email: profileEmail,
             about: profileAbout,

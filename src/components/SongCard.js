@@ -21,6 +21,8 @@ import ShareIcon from '@mui/icons-material/Share';
 
 import LikeButton from '../components/LikeButton';
 
+import config from '../services/config';
+
 function ActionMenu(props) {
     if (props.inPlaylist && props.playlistOwner) {
         return (
@@ -99,7 +101,7 @@ export default function SongCard(props) {
     }
 
     const deleteFromPlaylist = () => {
-        Axios.post('http://localhost:5000/api/delete_from_playlist', {
+        Axios.post(config.api + '/delete_from_playlist', {
             songID: props.song.songID,
             playlistID: props.playlistID,
         }).then((response) => {
@@ -114,7 +116,7 @@ export default function SongCard(props) {
     }
 
     const isSongLiked = async() => {
-        Axios.post('http://localhost:5000/api/is_song_liked', {
+        Axios.post(config.api + '/is_song_liked', {
             userID: localStorage.getItem("user"),
             songID: props.song.songID,
         }).then((response) => {
@@ -130,7 +132,7 @@ export default function SongCard(props) {
 
     const toggleLike = () => {
         if (!liked) {
-            Axios.post('http://localhost:5000/api/add_song_like', {
+            Axios.post(config.api + '/add_song_like', {
                 userID: localStorage.getItem("user"),
                 songID: props.song.songID,
             }).then((response) => {
@@ -143,7 +145,7 @@ export default function SongCard(props) {
                 }
             });
         } else {
-            Axios.post('http://localhost:5000/api/delete_song_like', {
+            Axios.post(config.api + '/delete_song_like', {
                 userID: localStorage.getItem("user"),
                 songID: props.song.songID,
             }).then((response) => {

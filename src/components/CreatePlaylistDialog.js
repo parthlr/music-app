@@ -8,6 +8,8 @@ import ModalDialog from '@mui/joy/ModalDialog';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 
+import config from '../services/config';
+
 export default function CreatePlaylistDialog(props) {
 
     const [playlistName, setPlaylistName] = useState("");
@@ -16,7 +18,7 @@ export default function CreatePlaylistDialog(props) {
         //var current_user = parseInt(localStorage.getItem("user"));
         //console.log(current_user);
 
-        Axios.post("http://localhost:5000/api/create_playlist", {
+        Axios.post(config.api + "/create_playlist", {
             name: playlistName,
             userID: localStorage.getItem("user"),
         }).then((response) => {
